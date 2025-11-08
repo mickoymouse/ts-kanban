@@ -35,3 +35,9 @@ body,
     --cst-bg2: #2B2C37;
     --cst-lines: #3E3F4E;
 }
+
+@layer base {
+    body {
+        @apply bg-(--cst-bg) text-(--cst-foreground);
+    }
+}

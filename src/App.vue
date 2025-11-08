@@ -1,11 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Navbar from "@/components/Navbar.vue";
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div class="flex w-full h-screen overflow-hidden">
+    <div><p>side bar</p></div>
+    <div>qweqeqw</div>
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+      <Navbar />
+      <main class="flex-1 w-full max-w-[1440px] mx-auto overflow-auto">
+        <RouterView />
+      </main>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>

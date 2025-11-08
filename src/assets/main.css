@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    @apply font-sans;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+    --cst-bg: #F4F7FD;
+    --cst-bg2: #FFFFFF;
+    --cst-primary: #635FC7;
+    --cst-primary-hover: #A8A4FF;
+    --cst-destructive: #EA5555;
+    --cst-destructive-hover: #FF9898;
+    --cst-lines: #E4EBFA;
+    --cst-foreground: #828FA3;
+}
+
+.dark {
+    --cst-bg: #20212C;
+    --cst-bg2: #2B2C37;
+    --cst-lines: #3E3F4E;
+}

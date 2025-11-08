@@ -7,7 +7,6 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "kanban",
       component: Kanban,
     },
   ],

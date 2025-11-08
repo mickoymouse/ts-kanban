@@ -1,4 +1,7 @@
-<script setup>
+<script setup lang="ts">
+import { useConvexQuery } from "convex-vue";
+import { api } from "../../convex/_generated/api";
+
 import LogoLight from "@/icons/logo-light.svg";
 import LogoDark from "@/icons/logo-dark.svg";
 import ListIcon from "@/icons/icon-board.svg";
@@ -9,6 +12,10 @@ import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
 
 const { isDarkMode, toggleTheme } = useTheme();
+
+const user: string = "default_user";
+
+const { data: boards, isPending } = useConvexQuery(api.functions.boards.getBoards, { user });
 </script>
 
 <template>
@@ -24,18 +31,12 @@ const { isDarkMode, toggleTheme } = useTheme();
         <p class="px-6 text-[12px]">All Boards ( 3 )</p>
         <ul class="flex flex-col gap-4">
           <li
+            v-for="board in boards"
+            :key="board._id"
             class="flex items-center gap-2 px-6 bg-(--cst-primary) text-white py-2 rounded-r-full cursor-pointer"
           >
             <ListIcon />
-            <span>Platform Launch</span>
-          </li>
-          <li class="flex items-center gap-2 px-6 cursor-pointer">
-            <ListIcon />
-            <span>Marketing Plan</span>
-          </li>
-          <li class="flex items-center gap-2 px-6 cursor-pointer">
-            <ListIcon />
-            <span>Roadmap</span>
+            <span>{{ board.name }}</span>
           </li>
         </ul>
         <p class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer">

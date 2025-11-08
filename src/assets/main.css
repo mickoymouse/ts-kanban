@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-@theme {
-    --font-sans: 'Plus Jakarta Sans', sans-serif;
-}
-
-body {
-    @apply font-sans;
-}
-
 html,
 body,
 #app {
@@ -19,7 +11,13 @@ body,
 
 @custom-variant dark (&:is(.dark *));
 
+@theme inline {
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --color-foreground: var(--foreground);
+}
+
 :root {
+    --foreground: oklch(0.145 0 0);
     --cst-bg: #F4F7FD;
     --cst-bg2: #FFFFFF;
     --cst-primary: #635FC7;
@@ -31,6 +29,7 @@ body,
 }
 
 .dark {
+    --foreground: oklch(0.985 0 0);
     --cst-bg: #20212C;
     --cst-bg2: #2B2C37;
     --cst-lines: #3E3F4E;
@@ -38,6 +37,6 @@ body,
 
 @layer base {
     body {
-        @apply bg-(--cst-bg) text-(--cst-foreground);
+        @apply bg-(--cst-bg) text-foreground font-sans;
     }
 }

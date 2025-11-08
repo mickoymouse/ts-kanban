@@ -1,0 +1,56 @@
+<script setup>
+import LogoLight from "@/icons/logo-light.svg";
+import LogoDark from "@/icons/logo-dark.svg";
+import ListIcon from "@/icons/icon-board.svg";
+import HideIcon from "@/icons/icon-hide-sidebar.svg";
+import LightIcon from "@/icons/icon-light-theme.svg";
+import DarkIcon from "@/icons/icon-dark-theme.svg";
+import { useTheme } from "@/composables/Theme.js";
+import Switch from "@/components/ui/Switch.vue";
+
+const { isDarkMode, toggleTheme } = useTheme();
+</script>
+
+<template>
+  <aside
+    class="min-w-[300px] max-w-[300px] bg-(--cst-bg2) border border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold"
+  >
+    <div class="h-24 flex items-center px-6">
+      <LogoDark v-if="!isDarkMode" />
+      <LogoLight v-else />
+    </div>
+    <div class="h-[calc(100vh-96px)] flex flex-col justify-between">
+      <div class="flex flex-col pr-6 gap-4">
+        <p class="px-6 text-[12px]">All Boards ( 3 )</p>
+        <ul class="flex flex-col gap-4">
+          <li
+            class="flex items-center gap-2 px-6 bg-(--cst-primary) text-white py-2 rounded-r-full cursor-pointer"
+          >
+            <ListIcon />
+            <span>Platform Launch</span>
+          </li>
+          <li class="flex items-center gap-2 px-6 cursor-pointer">
+            <ListIcon />
+            <span>Marketing Plan</span>
+          </li>
+          <li class="flex items-center gap-2 px-6 cursor-pointer">
+            <ListIcon />
+            <span>Roadmap</span>
+          </li>
+        </ul>
+        <p class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer">
+          <ListIcon />
+          <span>+ Create New Board</span>
+        </p>
+      </div>
+      <div class="pb-12 px-6 flex flex-col gap-4">
+        <div class="flex gap-4 w-full items-center justify-center bg-(--cst-bg) py-4 rounded-md">
+          <LightIcon />
+          <Switch :state="isDarkMode" @update:state="toggleTheme" />
+          <DarkIcon />
+        </div>
+        <p class="cursor-pointer flex items-center gap-2"><HideIcon />Hide Sidebar</p>
+      </div>
+    </div>
+  </aside>
+</template>

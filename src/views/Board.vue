@@ -26,7 +26,6 @@ watch([columns, isPending], () => {
         <!-- Column header skeleton -->
         <div class="h-4 bg-gray-300 rounded animate-pulse w-32"></div>
         <!-- Column content skeleton -->
-        <!-- Column content skeleton -->
         <div
           class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6 overflow-auto scrollbar-hide"
         >

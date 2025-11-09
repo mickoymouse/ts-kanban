@@ -4,6 +4,7 @@ import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useConvexQuery } from "convex-vue";
 
 import { api } from "../../convex/_generated/api";
+import { useBoardStore } from "@/stores/Board";
 import LogoLight from "@/icons/logo-light.svg";
 import LogoDark from "@/icons/logo-dark.svg";
 import ListIcon from "@/icons/icon-board.svg";
@@ -13,6 +14,7 @@ import DarkIcon from "@/icons/icon-dark-theme.svg";
 import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
 
+const boardStore = useBoardStore();
 const { isDarkMode, toggleTheme } = useTheme();
 const router = useRouter();
 const route = useRoute();
@@ -24,11 +26,14 @@ const currentBoardId = computed(() => route.params.boardId as string);
 watch(
   isPending,
   (pending) => {
+    boardStore.setLoading(pending);
     if (!pending) {
       if (!boards.value || boards.value.length === 0) {
         router.replace({ name: "kanban" });
+        boardStore.setName("");
       } else if (boards.value[0]) {
         const firstBoardId = boards.value[0]._id;
+        boardStore.setName(boards.value[0].name);
         router.replace({ name: "board", params: { boardId: firstBoardId } });
       }
     }
@@ -95,6 +100,7 @@ watch(
               'hover:bg-(--cst-bg)': currentBoardId !== board._id,
             }"
             tag="li"
+            @click="boardStore.setName(board.name)"
           >
             <ListIcon />
             <span>{{ board.name }}</span>

@@ -13,11 +13,6 @@ const boardId = computed(() => route.params.boardId as Id<"boards">);
 const { data: columns, isPending } = useLocalConvexQuery(api.functions.boards.getColumns, () => ({
   boardId: boardId.value,
 }));
-
-watch([columns, isPending], () => {
-  console.log("Columns:", columns.value);
-  console.log("Is Pending:", isPending.value);
-});
 </script>
 <template>
   <div class="flex flex-col h-full w-full">

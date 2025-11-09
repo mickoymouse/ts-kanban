@@ -8,7 +8,7 @@ import Sidebar from "@/components/Sidebar.vue";
     <Sidebar />
     <div class="flex-1 flex flex-col h-full overflow-hidden">
       <Navbar />
-      <main class="flex-1 w-full max-w-[1440px] mx-auto overflow-auto">
+      <main class="flex-1 w-full flex flex-start overflow-auto">
         <RouterView />
       </main>
     </div>

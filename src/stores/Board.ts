@@ -4,6 +4,12 @@ import { ref } from "vue";
 export const useBoardStore = defineStore("board", () => {
   const board = ref("");
   const isLoading = ref(false);
+  const columns = ref<
+    Array<{
+      _id: string;
+      name: string;
+    }>
+  >([]);
 
   const setName = (name: string) => {
     board.value = name;
@@ -13,5 +19,9 @@ export const useBoardStore = defineStore("board", () => {
     isLoading.value = loading;
   };
 
-  return { board, setName, isLoading, setLoading };
+  const setColumns = (newColumns: Array<{ _id: string; name: string }>) => {
+    columns.value = newColumns;
+  };
+
+  return { board, setName, isLoading, setLoading, columns, setColumns };
 });

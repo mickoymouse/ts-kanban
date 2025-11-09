@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, type Ref } from "vue";
+import { useConvexMutation } from "convex-vue";
+import { storeToRefs } from "pinia";
 
+import { useBoardStore } from "@/stores/Board";
 import OptionsIcon from "@/icons/icon-vertical-ellipsis.svg";
 import Modal from "@/components/ui/Modal.vue";
 import Dropdown from "@/components/ui/Dropdown.vue";
 import Checkbox from "@/components/ui/Checkbox.vue";
 import type { Id } from "../../convex/_generated/dataModel";
+import { api } from "../../convex/_generated/api";
+
+const boardStore = useBoardStore();
+const { columns } = storeToRefs(boardStore);
+const columnNames = computed(() => columns.value.map((column) => column.name));
+const columnNameToIdMap = computed(() => {
+  const map: Record<string, Id<"columns">> = {};
+  columns.value.forEach((column) => {
+    map[column.name] = column._id as Id<"columns">;
+  });
+  return map;
+});
 
 const props = defineProps<{
   task: {
@@ -14,6 +29,7 @@ const props = defineProps<{
     title: string;
     description?: string;
     subtasks: Array<{
+      _id: Id<"subtasks">;
       title: string;
       isCompleted: boolean;
     }>;
@@ -50,6 +66,31 @@ const taskOptionsClickOutside = (event: MouseEvent) => {
     !(event.target as Element).closest("svg")
   ) {
     closeTaskOptions();
+  }
+};
+
+const { mutate: updateSubtaskStatus } = useConvexMutation(api.functions.boards.updateSubtaskStatus);
+
+const updateSubtaskStatusHandler = async (subtaskId: Id<"subtasks">, isCompleted: boolean) => {
+  try {
+    await updateSubtaskStatus({ subtaskId, isCompleted });
+  } catch (error) {
+    console.error("Error updating subtask status:", error);
+  }
+};
+
+const { mutate: updateTaskStatus } = useConvexMutation(api.functions.boards.updateTaskStatus);
+
+const updateTaskStatusHandler = async (taskId: Id<"tasks">, columnName: string) => {
+  console.log("Updating task status to column:", columnName);
+  try {
+    const columnId = columnNameToIdMap.value[columnName];
+    console.log("Mapped column ID:", columnId);
+    if (columnId) {
+      await updateTaskStatus({ taskId, newColumnId: columnId });
+    }
+  } catch (error) {
+    console.error("Error updating task status:", error);
   }
 };
 
@@ -114,15 +155,24 @@ const closeTaskModal = () => {
       </p>
       <ul class="flex flex-col gap-2">
         <li
-          v-for="(subtask, index) in task?.subtasks"
-          :key="index"
+          v-for="subtask in task?.subtasks"
+          :key="subtask._id"
           class="p-4 bg-(--cst-bg) rounded-md hover:bg-(--cst-primary)/25 cursor-pointer"
         >
-          <Checkbox :id="subtask.title" :label="subtask.title" v-model="subtask.isCompleted" />
+          <Checkbox
+            :id="subtask.title"
+            :label="subtask.title"
+            v-model="subtask.isCompleted"
+            @change="updateSubtaskStatusHandler(subtask._id, subtask.isCompleted)"
+          />
         </li>
       </ul>
       <p class="text-[12px] text-(--cst-foreground)">Current Status</p>
-      <Dropdown :options="['Todo', 'In Progress', 'Done']" :selected="task.column" />
+      <Dropdown
+        :options="columnNames"
+        :selected="task.column"
+        @change="updateTaskStatusHandler(task._id, $event)"
+      />
     </div>
   </Modal>
 </template>

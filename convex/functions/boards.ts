@@ -1,4 +1,4 @@
-import { query } from "../_generated/server";
+import { query, mutation } from "../_generated/server";
 import { v } from "convex/values";
 
 export const getBoards = query({
@@ -94,5 +94,19 @@ export const getTask = query({
       subtasks,
       column,
     };
+  },
+});
+
+export const updateSubtaskStatus = mutation({
+  args: { subtaskId: v.id("subtasks"), isCompleted: v.boolean() },
+  handler: async (ctx, { subtaskId, isCompleted }) => {
+    await ctx.db.patch(subtaskId, { isCompleted });
+  },
+});
+
+export const updateTaskStatus = mutation({
+  args: { taskId: v.id("tasks"), newColumnId: v.id("columns") },
+  handler: async (ctx, { taskId, newColumnId }) => {
+    await ctx.db.patch(taskId, { columnId: newColumnId });
   },
 });

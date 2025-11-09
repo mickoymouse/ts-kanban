@@ -1,18 +1,31 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 
+import { useBoardStore } from "@/stores/Board";
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import TaskColumn from "@/components/TaskColumn.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 
+const boardStore = useBoardStore();
+const { setColumns } = boardStore;
 const route = useRoute();
 const boardId = computed(() => route.params.boardId as Id<"boards">);
 
 const { data: columns, isPending } = useLocalConvexQuery(api.functions.boards.getColumns, () => ({
   boardId: boardId.value,
 }));
+
+watch(
+  columns,
+  (newColumns) => {
+    if (newColumns) {
+      setColumns(newColumns);
+    }
+  },
+  { immediate: true },
+);
 </script>
 <template>
   <div class="flex flex-col h-full w-full">
@@ -48,7 +61,7 @@ const { data: columns, isPending } = useLocalConvexQuery(api.functions.boards.ge
       </button>
     </div>
     <div v-else class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide">
-      <div v-for="(column, index) in columns" class="flex flex-col gap-4" :key="index">
+      <div v-for="column in columns" class="flex flex-col gap-4" :key="column._id">
         <p class="font-bold text-[12px] tracking-[2.4px] text-(--cst-foreground)">
           {{ column.name.toUpperCase() }} ({{ column.tasks.length }})
         </p>

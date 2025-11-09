@@ -27,6 +27,6 @@ const { data: tasks, isPending } = useLocalConvexQuery(api.functions.boards.getT
         <div class="h-3 bg-gray-300 rounded w-1/2"></div>
       </div>
     </div>
-    <TaskCard v-else v-for="(task, index) in tasks" :key="index" :task="task" />
+    <TaskCard v-else v-for="task in tasks" :key="task._id" :task="task" />
   </div>
 </template>

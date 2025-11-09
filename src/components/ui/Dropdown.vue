@@ -9,6 +9,10 @@ const props = defineProps<{
   selected: string | null;
 }>();
 
+const emit = defineEmits<{
+  change: [value: string];
+}>();
+
 const selectedOption: Ref<string | null> = ref(props.selected || null);
 const open: Ref<boolean> = ref(false);
 const buttonRef: Ref<HTMLElement | null> = ref(null);
@@ -17,6 +21,7 @@ const dropdownRef: Ref<HTMLElement | null> = ref(null);
 const optionSelected = (option: string) => {
   selectedOption.value = option;
   open.value = false;
+  emit("change", option);
 };
 
 const handleClickOutside = (event: MouseEvent) => {

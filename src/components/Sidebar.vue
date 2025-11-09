@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { watch, computed } from "vue";
+import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useConvexQuery } from "convex-vue";
 import { api } from "../../convex/_generated/api";
 
@@ -12,10 +14,27 @@ import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
 
 const { isDarkMode, toggleTheme } = useTheme();
-
+const router = useRouter();
+const route = useRoute();
 const user: string = "default_user";
-
 const { data: boards, isPending } = useConvexQuery(api.functions.boards.getBoards, { user });
+const boardsCount = computed(() => (boards.value ? boards.value.length : 0));
+const currentBoardId = computed(() => route.params.boardId as string);
+
+watch(
+  isPending,
+  (pending) => {
+    if (!pending) {
+      if (!boards.value || boards.value.length === 0) {
+        router.replace({ name: "kanban" });
+      } else if (boards.value[0]) {
+        const firstBoardId = boards.value[0]._id;
+        router.replace({ name: "board", params: { boardId: firstBoardId } });
+      }
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -28,16 +47,22 @@ const { data: boards, isPending } = useConvexQuery(api.functions.boards.getBoard
     </div>
     <div class="h-[calc(100vh-96px)] flex flex-col justify-between">
       <div class="flex flex-col pr-6 gap-4">
-        <p class="px-6 text-[12px]">All Boards ( 3 )</p>
+        <p class="px-6 text-[12px]">All Boards ( {{ boardsCount }} )</p>
         <ul class="flex flex-col gap-4">
-          <li
+          <RouterLink
             v-for="board in boards"
             :key="board._id"
-            class="flex items-center gap-2 px-6 bg-(--cst-primary) text-white py-2 rounded-r-full cursor-pointer"
+            :to="{ name: 'board', params: { boardId: board._id } }"
+            class="flex items-center gap-2 px-6 py-2 rounded-r-full cursor-pointer"
+            :class="{
+              'bg-(--cst-primary) text-white': currentBoardId === board._id,
+              'hover:bg-(--cst-bg)': currentBoardId !== board._id,
+            }"
+            tag="li"
           >
             <ListIcon />
             <span>{{ board.name }}</span>
-          </li>
+          </RouterLink>
         </ul>
         <p class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer">
           <ListIcon />

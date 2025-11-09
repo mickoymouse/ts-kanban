@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { useConvexQuery } from "convex-vue";
+import { computed } from "vue";
 
+import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 import TaskCard from "@/components/TaskCard.vue";
 
 const props = defineProps<{
-  tasks: {
-    title: string;
-    description: string;
-    subtasks: { title: string; isCompleted: boolean }[];
-    status: string;
-  }[];
+  columnId: Id<"columns">;
 }>();
 
-const tasks = reactive(props.tasks);
+const columnId = computed(() => props.columnId);
+
+const { data: tasks, isPending } = useConvexQuery(api.functions.boards.getTasks, () => ({
+  columnId: columnId.value,
+}));
 </script>
 
 <template>

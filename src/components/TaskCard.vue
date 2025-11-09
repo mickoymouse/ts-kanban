@@ -1,25 +1,30 @@
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted, onUnmounted, type Ref } from "vue";
+import { computed, ref, onMounted, onUnmounted, type Ref } from "vue";
 
 import OptionsIcon from "@/icons/icon-vertical-ellipsis.svg";
 import Modal from "@/components/ui/Modal.vue";
 import Dropdown from "@/components/ui/Dropdown.vue";
 import Checkbox from "@/components/ui/Checkbox.vue";
+import type { Id } from "../../convex/_generated/dataModel";
 
 const props = defineProps<{
   task: {
+    _id: Id<"tasks">;
+    column: string;
     title: string;
-    description: string;
-    subtasks: { title: string; isCompleted: boolean }[];
-    status: string;
+    description?: string;
+    subtasks: Array<{
+      title: string;
+      isCompleted: boolean;
+    }>;
   };
 }>();
 
-const taskCompleted: Ref<number> = computed(
-  () => props.task.subtasks.filter((subtask) => subtask.isCompleted).length
+const taskCompleted = computed(
+  () => props.task.subtasks.filter((subtask) => subtask.isCompleted).length ?? 0,
 );
 
-const totalTasks: Ref<number> = computed(() => props.task.subtasks.length);
+const totalTasks = computed(() => props.task.subtasks.length ?? 0);
 
 const editTask = () => {
   closeTaskOptions();
@@ -70,7 +75,7 @@ const closeTaskModal = () => {
     class="w-full bg-(--cst-bg2) flex flex-col font-bold p-4 rounded-md cursor-pointer gap-2"
     @click="openTaskModal"
   >
-    <p class="text-[15px]">{{ task.title }}</p>
+    <p class="text-[15px]">{{ task?.title }}</p>
     <p class="text-[12px] text-(--cst-foreground)">
       {{ taskCompleted }} of {{ totalTasks }} subtasks
     </p>
@@ -80,7 +85,7 @@ const closeTaskModal = () => {
       class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[75vh] overflow-auto gap-4 font-bold"
     >
       <div class="flex gap-4 w-full justify-between relative">
-        <h2 class="text-[15px]">{{ task.title }}</h2>
+        <h2 class="text-[15px]">{{ task?.title }}</h2>
         <OptionsIcon class="cursor-pointer shrink-0" @click="openTaskOptions" />
         <div
           v-show="showTaskOptions"
@@ -102,14 +107,14 @@ const closeTaskModal = () => {
         </div>
       </div>
       <p class="font-medium text-[13px] text-(--cst-foreground)">
-        {{ task.description }}
+        {{ task?.description }}
       </p>
       <p class="text-[12px] text-(--cst-foreground)">
         Subtasks ({{ taskCompleted }} of {{ totalTasks }})
       </p>
       <ul class="flex flex-col gap-2">
         <li
-          v-for="(subtask, index) in task.subtasks"
+          v-for="(subtask, index) in task?.subtasks"
           :key="index"
           class="p-4 bg-(--cst-bg) rounded-md hover:bg-(--cst-primary)/25 cursor-pointer"
         >
@@ -117,7 +122,7 @@ const closeTaskModal = () => {
         </li>
       </ul>
       <p class="text-[12px] text-(--cst-foreground)">Current Status</p>
-      <Dropdown :options="['Todo', 'In Progress', 'Done']" :selected="task.status" />
+      <Dropdown :options="['Todo', 'In Progress', 'Done']" :selected="task.column" />
     </div>
   </Modal>
 </template>

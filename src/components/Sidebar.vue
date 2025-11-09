@@ -2,8 +2,8 @@
 import { watch, computed } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useConvexQuery } from "convex-vue";
-import { api } from "../../convex/_generated/api";
 
+import { api } from "../../convex/_generated/api";
 import LogoLight from "@/icons/logo-light.svg";
 import LogoDark from "@/icons/logo-dark.svg";
 import ListIcon from "@/icons/icon-board.svg";

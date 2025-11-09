@@ -10,3 +10,89 @@ export const getBoards = query({
       .collect();
   },
 });
+
+export const getColumns = query({
+  args: { boardId: v.id("boards") },
+  handler: async (ctx, { boardId }) => {
+    const columns = await ctx.db
+      .query("columns")
+      .withIndex("by_board", (q) => q.eq("boardId", boardId))
+      .collect();
+
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_board", (q) => q.eq("boardId", boardId))
+      .collect();
+
+    const columnsWithTasks = columns.map((column) => {
+      return {
+        ...column,
+        tasks: tasks.filter((task) => task.columnId === column._id),
+      };
+    });
+
+    return columnsWithTasks;
+  },
+});
+
+export const getTasks = query({
+  args: { columnId: v.id("columns") },
+  handler: async (ctx, { columnId }) => {
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_column", (q) => q.eq("columnId", columnId))
+      .collect();
+
+    const column = await ctx.db.get(columnId);
+
+    if (!column) {
+      throw new Error("Column not found");
+    }
+
+    const taskIds = tasks.map((task) => task._id);
+
+    const allSubtasks = await Promise.all(
+      taskIds.map((taskId) =>
+        ctx.db
+          .query("subtasks")
+          .withIndex("by_task", (q) => q.eq("taskId", taskId))
+          .collect(),
+      ),
+    );
+
+    const subtasks = allSubtasks.flat();
+
+    const tasksWithSubtasks = tasks.map((task) => {
+      return {
+        ...task,
+        column: column.name,
+        subtasks: subtasks.filter((subtask) => subtask.taskId === task._id),
+      };
+    });
+
+    return tasksWithSubtasks;
+  },
+});
+
+export const getTask = query({
+  args: { taskId: v.id("tasks") },
+  handler: async (ctx, { taskId }) => {
+    const task = await ctx.db.get(taskId);
+
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    const column = await ctx.db.get(task.columnId);
+
+    const subtasks = await ctx.db
+      .query("subtasks")
+      .withIndex("by_task", (q) => q.eq("taskId", taskId))
+      .collect();
+
+    return {
+      ...task,
+      subtasks,
+      column,
+    };
+  },
+});

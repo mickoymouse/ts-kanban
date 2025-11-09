@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useConvexQuery } from "convex-vue";
 import { useRoute } from "vue-router";
 import { computed, ref, watch } from "vue";
 
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import TaskColumn from "@/components/TaskColumn.vue";
+import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 
 const route = useRoute();
 const boardId = computed(() => route.params.boardId as Id<"boards">);
 
-const { data: columns, isPending } = useConvexQuery(api.functions.boards.getColumns, () => ({
+const { data: columns, isPending } = useLocalConvexQuery(api.functions.boards.getColumns, () => ({
   boardId: boardId.value,
 }));
 
@@ -26,12 +26,17 @@ watch([columns, isPending], () => {
         <!-- Column header skeleton -->
         <div class="h-4 bg-gray-300 rounded animate-pulse w-32"></div>
         <!-- Column content skeleton -->
-        <div class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6">
-          <div
-            v-for="j in 2"
-            :key="j"
-            class="w-full bg-gray-300 rounded-md animate-pulse h-20"
-          ></div>
+        <!-- Column content skeleton -->
+        <div
+          class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6 overflow-auto scrollbar-hide"
+        >
+          <div class="space-y-4">
+            <div v-for="n in 3" :key="n" class="bg-gray-200 rounded-lg p-4 animate-pulse">
+              <div class="h-4 bg-gray-300 rounded mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded w-3/4 mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

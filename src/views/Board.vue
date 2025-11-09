@@ -60,7 +60,7 @@ watch(
         + Add New Column
       </button>
     </div>
-    <div v-else class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide">
+    <div v-else class="w-full flex-1 flex gap-4 px-4 pt-4 overflow-auto scrollbar-hide">
       <div v-for="column in columns" class="flex flex-col gap-4" :key="column._id">
         <p class="font-bold text-[12px] tracking-[2.4px] text-(--cst-foreground)">
           {{ column.name.toUpperCase() }} ({{ column.tasks.length }})

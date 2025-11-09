@@ -1,5 +1,5 @@
 <script setup>
-import { Teleport, defineEmits } from "vue";
+import { Teleport } from "vue";
 
 const props = defineProps({
   show: {

@@ -45,7 +45,43 @@ watch(
       <LogoDark v-if="!isDarkMode" />
       <LogoLight v-else />
     </div>
-    <div class="h-[calc(100vh-96px)] flex flex-col justify-between">
+    <div v-if="isPending" class="h-[calc(100vh-96px)] flex flex-col justify-between">
+      <div class="flex flex-col pr-6 gap-4">
+        <!-- Skeleton for "All Boards" heading -->
+        <div class="px-6">
+          <div class="h-3 w-24 bg-(--cst-lines) animate-pulse rounded"></div>
+        </div>
+        <!-- Skeleton for board items -->
+        <div v-for="n in 6" :key="n" class="px-6">
+          <div class="h-10 bg-(--cst-bg) animate-pulse rounded-r-full flex items-center gap-2 px-2">
+            <div class="w-4 h-4 bg-(--cst-lines) rounded"></div>
+            <div class="h-3 bg-(--cst-lines) rounded flex-1"></div>
+          </div>
+        </div>
+        <!-- Skeleton for "Create New Board" -->
+        <div class="px-6">
+          <div class="h-10 bg-(--cst-lines) animate-pulse rounded flex items-center gap-2 px-2">
+            <div class="w-4 h-4 bg-(--cst-bg) rounded"></div>
+            <div class="h-3 bg-(--cst-bg) rounded w-32"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Skeleton for bottom section -->
+      <div class="pb-12 px-6 flex flex-col gap-4">
+        <!-- Skeleton for theme toggle -->
+        <div class="flex gap-4 w-full items-center justify-center bg-(--cst-bg) py-4 rounded-md">
+          <div class="w-4 h-4 bg-(--cst-lines) animate-pulse rounded"></div>
+          <div class="w-12 h-6 bg-(--cst-lines) animate-pulse rounded-full"></div>
+          <div class="w-4 h-4 bg-(--cst-lines) animate-pulse rounded"></div>
+        </div>
+        <!-- Skeleton for hide sidebar -->
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-(--cst-lines) animate-pulse rounded"></div>
+          <div class="h-3 w-20 bg-(--cst-lines) animate-pulse rounded"></div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="h-[calc(100vh-96px)] flex flex-col justify-between">
       <div class="flex flex-col pr-6 gap-4">
         <p class="px-6 text-[12px]">All Boards ( {{ boardsCount }} )</p>
         <ul class="flex flex-col gap-4">

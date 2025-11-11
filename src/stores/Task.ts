@@ -17,18 +17,35 @@ export type Task = {
 
 export const useTaskModalStore = defineStore("taskModal", () => {
   const show = ref(false);
+  const showDelete = ref(false);
   const taskAction = ref<TaskAction>("view");
   const task = ref<Task | null>(null);
+  const taskToDelete = ref<Task | null>(null);
 
   const showTaskModal = (action: TaskAction, taskData: Task | null = null) => {
     taskAction.value = action;
-    task.value = taskData;
+    if (taskData) task.value = taskData;
     show.value = true;
   };
 
-  const closeTaskModal = () => {
+  const closeTaskModal = (reset = true) => {
     show.value = false;
-    task.value = null;
+    if (reset) {
+      task.value = null;
+      taskToDelete.value = null;
+    }
+  };
+
+  const setTaskToDelete = (taskData: Task | null) => {
+    taskToDelete.value = taskData;
+  };
+
+  const showDeleteModal = () => {
+    showDelete.value = true;
+  };
+
+  const closeDeleteModal = () => {
+    showDelete.value = false;
   };
 
   return {
@@ -37,5 +54,10 @@ export const useTaskModalStore = defineStore("taskModal", () => {
     task,
     showTaskModal,
     closeTaskModal,
+    taskToDelete,
+    setTaskToDelete,
+    showDelete,
+    showDeleteModal,
+    closeDeleteModal,
   };
 });

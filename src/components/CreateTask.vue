@@ -83,16 +83,17 @@ const removeSubtask = (index: number) => {
     <h2 class="text-[18px]">Add New Task</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input
-      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
       id="title"
       type="text"
       placeholder="e.g. Take coffee break"
       v-model="taskForm.title"
       :disabled="isCreatingTask"
+      required
     />
     <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
     <textarea
-      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
       id="description"
       rows="4"
       cols="50"
@@ -109,11 +110,12 @@ recharge the batteries a little."
         :key="index"
       >
         <input
-          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
           type="text"
           placeholder="e.g. Make coffee"
           v-model="taskForm.subtasks[index]"
           :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
+          required
         />
         <CrossIcon
           :class="[

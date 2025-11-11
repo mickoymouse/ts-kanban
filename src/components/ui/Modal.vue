@@ -14,7 +14,10 @@ const emit = defineEmits(["closeModal"]);
 <template>
   <Teleport to="body">
     <div v-if="props.show" class="w-full h-full fixed z-999 bg-black/50 inset-0">
-      <div class="flex items-center justify-center w-full h-full" @click.self="emit('closeModal')">
+      <div
+        class="flex items-center justify-center w-full h-full"
+        @mousedown.self="emit('closeModal')"
+      >
         <slot></slot>
       </div>
     </div>

@@ -30,10 +30,10 @@ watch(
     if (!pending) {
       if (!boards.value || boards.value.length === 0) {
         router.replace({ name: "kanban" });
-        boardStore.setName("");
+        boardStore.setBoard("", "");
       } else if (boards.value[0]) {
         const firstBoardId = boards.value[0]._id;
-        boardStore.setName(boards.value[0].name);
+        boardStore.setBoard(firstBoardId, boards.value[0].name);
         router.replace({ name: "board", params: { boardId: firstBoardId } });
       }
     }
@@ -100,7 +100,7 @@ watch(
               'hover:bg-(--cst-bg)': currentBoardId !== board._id,
             }"
             tag="li"
-            @click="boardStore.setName(board.name)"
+            @click="boardStore.setBoard(board._id, board.name)"
           >
             <ListIcon />
             <span>{{ board.name }}</span>

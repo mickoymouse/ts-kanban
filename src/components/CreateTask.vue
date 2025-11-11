@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, nextTick, reactive } from "vue";
+import { useConvexMutation } from "convex-vue";
 
 import Dropdown from "@/components/ui/Dropdown.vue";
 import { useBoardStore } from "@/stores/Board";
-import type { Id } from "../../convex/_generated/dataModel";
 import CrossIcon from "@/icons/icon-cross.svg";
+import type { Id } from "../../convex/_generated/dataModel";
+import { api } from "../../convex/_generated/api";
+import { useTaskModalStore } from "@/stores/Task";
 
 const boardStore = useBoardStore();
+const { board } = storeToRefs(boardStore);
 const { columns } = storeToRefs(boardStore);
+const taskModalStore = useTaskModalStore();
+const { closeTaskModal } = taskModalStore;
+
 const columnNames = computed(() => columns.value.map((column) => column.name));
 const columnNameToIdMap = computed(() => {
   const map: Record<string, Id<"columns">> = {};
@@ -20,15 +27,29 @@ const columnNameToIdMap = computed(() => {
 
 const taskForm = reactive({
   title: "",
-  description: "" as string | null,
+  description: "" as string | undefined,
   subtasks: [""] as Array<string>,
   status: (columnNames.value[0] as string) || null,
 });
 
 const subtaskRefs: (HTMLInputElement | null)[] = [];
 
-const createTask = () => {
-  console.log("Create Task clicked", taskForm);
+const createTask = useConvexMutation(api.functions.boards.createTask);
+
+const createTaskHandler = async () => {
+  await createTask.mutate({
+    task: {
+      title: taskForm.title,
+      description: taskForm.description,
+      boardId: board.value?.id as Id<"boards">,
+      columnId: columnNameToIdMap.value[taskForm.status as string] as Id<"columns">,
+      subtasks: taskForm.subtasks
+        .filter((subtask) => subtask.trim() !== "")
+        .map((subtask) => ({ title: subtask, isCompleted: false })),
+    },
+  });
+
+  closeTaskModal();
 };
 
 const addSubtask = async () => {
@@ -45,7 +66,10 @@ const removeSubtask = (index: number) => {
 </script>
 
 <template>
-  <form @submit.prevent="createTask" class="font-bold flex flex-col w-full gap-4 text-[13px]">
+  <form
+    @submit.prevent="createTaskHandler"
+    class="font-bold flex flex-col w-full gap-4 text-[13px]"
+  >
     <h2 class="text-[18px]">Add New Task</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input

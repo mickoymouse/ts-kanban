@@ -9,20 +9,11 @@ import { useBoardStore } from "@/stores/Board";
 import Checkbox from "@/components/ui/Checkbox.vue";
 import Dropdown from "@/components/ui/Dropdown.vue";
 import OptionsIcon from "@/icons/icon-vertical-ellipsis.svg";
+import type { Task } from "@/stores/Task";
 
 const props = defineProps<{
   show: boolean;
-  task: {
-    _id: Id<"tasks">;
-    column: string;
-    title: string;
-    description?: string;
-    subtasks: Array<{
-      _id: Id<"subtasks">;
-      title: string;
-      isCompleted: boolean;
-    }>;
-  };
+  task: Task;
 }>();
 
 const taskCompleted = computed(

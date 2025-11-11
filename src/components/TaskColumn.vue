@@ -1,35 +1,26 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
 
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import TaskCard from "@/components/TaskCard.vue";
 import TaskModal from "@/components/TaskModal.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
+import { useTaskModalStore } from "@/stores/Task";
 
 const props = defineProps<{
   columnId: Id<"columns">;
 }>();
+
+const taskModalStore = useTaskModalStore();
+const { show } = storeToRefs(taskModalStore);
 
 const columnId = computed(() => props.columnId);
 
 const { data: tasks, isPending } = useLocalConvexQuery(api.functions.boards.getTasks, () => ({
   columnId: columnId.value,
 }));
-
-// Modal state
-const selectedTask = ref(null);
-const showTaskModal = ref(false);
-
-const openTaskModal = (task: any) => {
-  selectedTask.value = task;
-  showTaskModal.value = true;
-};
-
-const closeTaskModal = () => {
-  selectedTask.value = null;
-  showTaskModal.value = false;
-};
 </script>
 
 <template>
@@ -42,20 +33,8 @@ const closeTaskModal = () => {
         <div class="h-3 bg-gray-300 rounded w-1/2"></div>
       </div>
     </div>
-    <TaskCard
-      v-else
-      v-for="task in tasks"
-      :key="task._id"
-      :task="task"
-      @openTaskModal="openTaskModal"
-    />
+    <TaskCard v-else v-for="task in tasks" :key="task._id" :task="task" />
 
-    <TaskModal
-      v-if="selectedTask"
-      :show="showTaskModal"
-      :task="selectedTask"
-      :action="'view'"
-      @closeTaskModal="closeTaskModal"
-    />
+    <TaskModal v-if="show" />
   </div>
 </template>

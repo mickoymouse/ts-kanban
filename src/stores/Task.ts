@@ -46,6 +46,8 @@ export const useTaskModalStore = defineStore("taskModal", () => {
 
   const closeDeleteModal = () => {
     showDelete.value = false;
+    task.value = null;
+    taskToDelete.value = null;
   };
 
   return {

@@ -3,9 +3,13 @@ import { storeToRefs } from "pinia";
 
 import { useBoardStore } from "@/stores/Board";
 import OptionsButton from "@/icons/icon-vertical-ellipsis.svg";
+import { useTaskModalStore } from "@/stores/Task";
 
 const boardStore = useBoardStore();
 const { board, isLoading } = storeToRefs(boardStore);
+
+const taskModalStore = useTaskModalStore();
+const { showTaskModal } = taskModalStore;
 </script>
 
 <template>
@@ -19,8 +23,9 @@ const { board, isLoading } = storeToRefs(boardStore);
     </div>
     <div class="flex items-center gap-4">
       <button
-        class="bg-(--cst-primary) px-8 py-3 rounded-full disabled:opacity-30 text-white cursor-pointer"
-        disabled
+        class="bg-(--cst-primary) h-10 w-[164px] rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
+        :disabled="isLoading || board == null"
+        @click="showTaskModal('create')"
       >
         + Add New Task
       </button>

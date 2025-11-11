@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useBoardStore = defineStore("board", () => {
-  const board = ref("");
+  const board = ref<string | null>(null);
   const isLoading = ref(false);
   const columns = ref<
     Array<{

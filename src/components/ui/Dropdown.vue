@@ -53,7 +53,7 @@ onUnmounted(() => {
   <div ref="dropdownRef">
     <button
       ref="buttonRef"
-      class="relative w-full bg-(--cst-bg2) flex justify-between items-center border border-(--cst-foreground)/25 p-3 rounded-md font-medium text-[13px] cursor-pointer focus:border-(--cst-primary)"
+      class="relative w-full bg-(--cst-bg2) flex justify-between items-center border border-(--cst-foreground)/25 p-3 rounded-md font-medium text-[13px] cursor-pointer focus:border-(--cst-primary) focus:border-2"
       @click="open = !open"
     >
       {{ selectedOption || "Select an option" }}

@@ -47,7 +47,6 @@ const { mutate: updateTaskStatus } = useConvexMutation(api.functions.boards.upda
 const updateTaskStatusHandler = async (taskId: Id<"tasks">, columnName: string) => {
   try {
     const columnId = columnNameToIdMap.value[columnName];
-    console.log("Mapped column ID:", columnId);
     if (columnId) {
       await updateTaskStatus({ taskId, newColumnId: columnId });
     }

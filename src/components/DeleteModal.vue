@@ -1,16 +1,29 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
+import { useConvexMutation } from "convex-vue";
 
 import Modal from "@/components/ui/Modal.vue";
 import { useTaskModalStore } from "@/stores/Task";
+import { api } from "../../convex/_generated/api";
 
 const taskModalStore = useTaskModalStore();
 const { showDelete, taskToDelete } = storeToRefs(taskModalStore);
 const { closeDeleteModal, showTaskModal } = taskModalStore;
+const isDeleting = ref(false);
 
-const deleteTask = () => {
-  // Implement the delete task logic here
-  closeDeleteModal();
+const deleteTaskMutation = useConvexMutation(api.functions.tasks.deleteTask);
+
+const deleteTask = async () => {
+  isDeleting.value = true;
+  try {
+    await deleteTaskMutation.mutate({ taskId: taskToDelete.value!._id });
+    closeDeleteModal();
+  } catch (error) {
+    console.error("Error deleting task:", error);
+  } finally {
+    isDeleting.value = false;
+  }
 };
 
 const cancelDelete = () => {
@@ -33,12 +46,14 @@ const cancelDelete = () => {
         <button
           class="bg-(--cst-destructive) text-white flex-1 rounded-full p-2 cursor-pointer hover:bg-(--cst-destructive-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-destructive-hover)"
           @click="deleteTask"
+          :disabled="isDeleting"
         >
           Delete
         </button>
         <button
           class="bg-(--cst-primary)/10 text-(--cst-primary) flex-1 rounded-full p-2 cursor-pointer hover:bg-(--cst-primary) hover:text-white transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)/10 disabled:text-(--cst-primary)"
           @click="cancelDelete"
+          :disabled="isDeleting"
         >
           Cancel
         </button>

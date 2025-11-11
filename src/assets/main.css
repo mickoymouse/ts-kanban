@@ -41,3 +41,50 @@ body,
         @apply bg-(--cst-bg) text-foreground font-sans;
     }
 }
+
+/* TOASTS */
+.Vue-Toastification__toast {
+    @apply cursor-pointer;
+}
+
+/* SUCCESS */
+.Vue-Toastification__toast--success.bg-success-toast {
+    @apply bg-(--cst-bg) text-foreground;
+}
+
+.Vue-Toastification__toast--success .Vue-Toastification__toast-body {
+    @apply text-sm font-medium;
+}
+
+.Vue-Toastification__toast--success .Vue-Toastification__icon {
+    @apply text-green-500;
+}
+
+.Vue-Toastification__toast--success .Vue-Toastification__progress-bar {
+    @apply bg-green-500;
+}
+
+.Vue-Toastification__toast--success .Vue-Toastification__close-button {
+    @apply text-(--cst-foreground);
+}
+
+/* ERROR */
+.Vue-Toastification__toast--error.bg-error-toast {
+    @apply bg-(--cst-bg) text-foreground;
+}
+
+.Vue-Toastification__toast--error .Vue-Toastification__toast-body {
+    @apply text-sm font-medium;
+}
+
+.Vue-Toastification__toast--error .Vue-Toastification__icon {
+    @apply text-(--cst-destructive);
+}
+
+.Vue-Toastification__toast--error .Vue-Toastification__progress-bar {
+    @apply bg-(--cst-destructive);
+}
+
+.Vue-Toastification__toast--error .Vue-Toastification__close-button {
+    @apply text-(--cst-foreground);
+}

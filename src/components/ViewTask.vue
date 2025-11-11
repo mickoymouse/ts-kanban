@@ -9,7 +9,7 @@ import { useBoardStore } from "@/stores/Board";
 import Checkbox from "@/components/ui/Checkbox.vue";
 import Dropdown from "@/components/ui/Dropdown.vue";
 import OptionsIcon from "@/icons/icon-vertical-ellipsis.svg";
-import type { Task } from "@/stores/Task";
+import { useTaskModalStore, type Task } from "@/stores/Task";
 
 const props = defineProps<{
   show: boolean;
@@ -22,7 +22,10 @@ const taskCompleted = computed(
 const totalTasks = computed(() => props.task.subtasks.length ?? 0);
 
 const boardStore = useBoardStore();
+const taskModalStore = useTaskModalStore();
+const { closeTaskModal, setTaskToDelete, showDeleteModal } = taskModalStore;
 const { columns } = storeToRefs(boardStore);
+
 const columnNames = computed(() => columns.value.map((column) => column.name));
 const columnNameToIdMap = computed(() => {
   const map: Record<string, Id<"columns">> = {};
@@ -61,6 +64,10 @@ const editTask = () => {
 
 const deleteTask = () => {
   closeTaskOptions();
+  closeTaskModal(false);
+
+  setTaskToDelete(props.task);
+  showDeleteModal();
 };
 const showTaskOptions: Ref<boolean> = ref(false);
 const closeTaskOptions = () => {

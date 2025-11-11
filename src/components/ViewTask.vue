@@ -45,7 +45,6 @@ const updateSubtaskStatusHandler = async (subtaskId: Id<"subtasks">, isCompleted
 const { mutate: updateTaskStatus } = useConvexMutation(api.functions.boards.updateTaskStatus);
 
 const updateTaskStatusHandler = async (taskId: Id<"tasks">, columnName: string) => {
-  console.log("Updating task status to column:", columnName);
   try {
     const columnId = columnNameToIdMap.value[columnName];
     console.log("Mapped column ID:", columnId);
@@ -138,7 +137,7 @@ onUnmounted(() => {
   <p class="text-[12px] text-(--cst-foreground)">Current Status</p>
   <Dropdown
     :options="columnNames"
-    :selected="task.column"
-    @change="updateTaskStatusHandler(task._id, $event)"
+    v-model="task.column"
+    @update:modelValue="updateTaskStatusHandler(task._id, $event)"
   />
 </template>

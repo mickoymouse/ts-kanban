@@ -2,32 +2,37 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useConvexMutation } from "convex-vue";
+import { useToast } from "vue-toastification";
+import { LoaderCircle } from "lucide-vue-next";
 
 import Modal from "@/components/ui/Modal.vue";
 import { useTaskModalStore } from "@/stores/Task";
 import { api } from "../../convex/_generated/api";
 
+const toast = useToast();
 const taskModalStore = useTaskModalStore();
 const { showDelete, taskToDelete } = storeToRefs(taskModalStore);
 const { closeDeleteModal, showTaskModal } = taskModalStore;
-const isDeleting = ref(false);
+const isDeletingTask = ref(false);
 
 const deleteTaskMutation = useConvexMutation(api.functions.tasks.deleteTask);
 
 const deleteTask = async () => {
-  isDeleting.value = true;
+  isDeletingTask.value = true;
   try {
     await deleteTaskMutation.mutate({ taskId: taskToDelete.value!._id });
     closeDeleteModal();
+    toast.success("Task deleted successfully!");
   } catch (error) {
     console.error("Error deleting task:", error);
+    toast.error("Failed to delete task. Please try again.");
   } finally {
-    isDeleting.value = false;
+    isDeletingTask.value = false;
   }
 };
 
 const cancelDelete = () => {
-  closeDeleteModal();
+  closeDeleteModal(false);
   showTaskModal("view", taskToDelete.value!);
 };
 </script>
@@ -44,16 +49,17 @@ const cancelDelete = () => {
       </p>
       <div class="flex items-center justify-between text-[13px] gap-4">
         <button
-          class="bg-(--cst-destructive) text-white flex-1 rounded-full p-2 cursor-pointer hover:bg-(--cst-destructive-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-destructive-hover)"
+          class="flex items-center justify-center gap-2 bg-(--cst-destructive) text-white flex-1 rounded-full p-2 cursor-pointer hover:bg-(--cst-destructive-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-destructive-hover)"
           @click="deleteTask"
-          :disabled="isDeleting"
+          :disabled="isDeletingTask"
         >
-          Delete
+          {{ isDeletingTask ? "Deleting task" : "Delete" }}
+          <LoaderCircle v-if="isDeletingTask" class="mr-3 size-5 animate-spin text-white" />
         </button>
         <button
           class="bg-(--cst-primary)/10 text-(--cst-primary) flex-1 rounded-full p-2 cursor-pointer hover:bg-(--cst-primary) hover:text-white transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)/10 disabled:text-(--cst-primary)"
           @click="cancelDelete"
-          :disabled="isDeleting"
+          :disabled="isDeletingTask"
         >
           Cancel
         </button>

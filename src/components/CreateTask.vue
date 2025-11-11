@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { computed, nextTick, reactive, ref } from "vue";
 import { useConvexMutation } from "convex-vue";
 import { LoaderCircle } from "lucide-vue-next";
+import { useToast } from "vue-toastification";
 
 import Dropdown from "@/components/ui/Dropdown.vue";
 import { useBoardStore } from "@/stores/Board";
@@ -11,6 +12,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import { useTaskModalStore } from "@/stores/Task";
 
+const toast = useToast();
 const boardStore = useBoardStore();
 const { board } = storeToRefs(boardStore);
 const { columns } = storeToRefs(boardStore);
@@ -53,9 +55,11 @@ const createTaskHandler = async () => {
           .map((subtask) => ({ title: subtask, isCompleted: false })),
       },
     });
+    toast.success("Task created successfully!");
     closeTaskModal();
   } catch (error) {
     console.error("Error creating task:", error);
+    toast.error("Failed to create task. Please try again.");
   } finally {
     isCreatingTask.value = false;
   }
@@ -105,7 +109,7 @@ recharge the batteries a little."
       <legend class="text-[12px] text-(--cst-foreground) pb-4">Subtasks</legend>
       <div
         class="flex items-center gap-4 w-full"
-        v-for="(subtask, index) in taskForm.subtasks"
+        v-for="(_, index) in taskForm.subtasks"
         :key="index"
       >
         <input

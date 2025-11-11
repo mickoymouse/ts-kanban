@@ -13,7 +13,7 @@ const { setColumns } = boardStore;
 const route = useRoute();
 const boardId = computed(() => route.params.boardId as Id<"boards">);
 
-const { data: columns, isPending } = useLocalConvexQuery(api.functions.boards.getColumns, () => ({
+const { data: columns, isPending } = useLocalConvexQuery(api.functions.columns.getColumns, () => ({
   boardId: boardId.value,
 }));
 

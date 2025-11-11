@@ -37,7 +37,7 @@ const isCreatingTask = ref(false);
 
 const subtaskRefs: (HTMLInputElement | null)[] = [];
 
-const createTask = useConvexMutation(api.functions.boards.createTask);
+const createTask = useConvexMutation(api.functions.tasks.createTask);
 
 const createTaskHandler = async () => {
   isCreatingTask.value = true;

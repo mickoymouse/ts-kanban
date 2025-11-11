@@ -35,7 +35,9 @@ const columnNameToIdMap = computed(() => {
   return map;
 });
 
-const { mutate: updateSubtaskStatus } = useConvexMutation(api.functions.boards.updateSubtaskStatus);
+const { mutate: updateSubtaskStatus } = useConvexMutation(
+  api.functions.subtasks.updateSubtaskStatus,
+);
 
 const updateSubtaskStatusHandler = async (subtaskId: Id<"subtasks">, isCompleted: boolean) => {
   try {
@@ -45,7 +47,7 @@ const updateSubtaskStatusHandler = async (subtaskId: Id<"subtasks">, isCompleted
   }
 };
 
-const { mutate: updateTaskStatus } = useConvexMutation(api.functions.boards.updateTaskStatus);
+const { mutate: updateTaskStatus } = useConvexMutation(api.functions.tasks.updateTaskStatus);
 
 const updateTaskStatusHandler = async (taskId: Id<"tasks">, columnName: string) => {
   try {

@@ -9,6 +9,9 @@
  */
 
 import type * as functions_boards from "../functions/boards.js";
+import type * as functions_columns from "../functions/columns.js";
+import type * as functions_subtasks from "../functions/subtasks.js";
+import type * as functions_tasks from "../functions/tasks.js";
 
 import type {
   ApiFromModules,
@@ -26,6 +29,9 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   "functions/boards": typeof functions_boards;
+  "functions/columns": typeof functions_columns;
+  "functions/subtasks": typeof functions_subtasks;
+  "functions/tasks": typeof functions_tasks;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

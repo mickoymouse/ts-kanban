@@ -19,7 +19,7 @@ const { show, showDelete } = storeToRefs(taskModalStore);
 
 const columnId = computed(() => props.columnId);
 
-const { data: tasks, isPending } = useLocalConvexQuery(api.functions.boards.getTasks, () => ({
+const { data: tasks, isPending } = useLocalConvexQuery(api.functions.tasks.getTasks, () => ({
   columnId: columnId.value,
 }));
 </script>

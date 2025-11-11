@@ -7,6 +7,7 @@ import ArrowUpIcon from "@/icons/icon-chevron-up.svg";
 const props = defineProps<{
   options: Array<string>;
   modelValue: string | null;
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -38,6 +39,11 @@ const updateWidth = () => {
   }
 };
 
+const toggleDropdown = () => {
+  if (props.disabled) return;
+  open.value = !open.value;
+};
+
 onMounted(() => {
   updateWidth();
   document.addEventListener("click", handleClickOutside);
@@ -53,8 +59,9 @@ onUnmounted(() => {
   <div ref="dropdownRef">
     <button
       ref="buttonRef"
-      class="relative w-full bg-(--cst-bg2) flex justify-between items-center border border-(--cst-foreground)/25 p-3 rounded-md font-medium text-[13px] cursor-pointer focus:border-(--cst-primary) focus:border-2"
-      @click="open = !open"
+      class="relative w-full bg-(--cst-bg2) flex justify-between items-center border border-(--cst-foreground)/25 p-3 rounded-md font-medium text-[13px] cursor-pointer focus:border-(--cst-primary) focus:border-2 disabled:cursor-not-allowed"
+      @click="toggleDropdown"
+      :disabled="disabled"
     >
       {{ selectedOption || "Select an option" }}
       <ArrowUpIcon v-if="open" aria-hidden="true" />

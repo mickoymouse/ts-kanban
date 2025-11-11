@@ -25,7 +25,7 @@ watch(
     if (newVal !== undefined) {
       isChecked.value = newVal;
     }
-  }
+  },
 );
 </script>
 
@@ -33,7 +33,7 @@ watch(
   <label class="flex items-center gap-4 cursor-pointer">
     <input type="checkbox" :id="id" class="sr-only" :checked="isChecked" @click="toggle" />
     <span
-      class="h-4 w-4 border border-(--cst-foreground)/24 rounded-xs flex items-center justify-center"
+      class="h-4 w-4 border border-(--cst-foreground)/24 rounded-xs flex items-center justify-center shrink-0"
       :class="isChecked ? 'bg-(--cst-primary)' : 'bg-white'"
       aria-hidden="true"
     >

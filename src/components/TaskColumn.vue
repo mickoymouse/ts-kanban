@@ -54,6 +54,7 @@ const closeTaskModal = () => {
       v-if="selectedTask"
       :show="showTaskModal"
       :task="selectedTask"
+      :action="'view'"
       @closeTaskModal="closeTaskModal"
     />
   </div>

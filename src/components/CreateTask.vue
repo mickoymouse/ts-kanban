@@ -42,7 +42,6 @@ const createTask = useConvexMutation(api.functions.boards.createTask);
 const createTaskHandler = async () => {
   isCreatingTask.value = true;
   try {
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     await createTask.mutate({
       task: {
         title: taskForm.title,
@@ -83,7 +82,7 @@ const removeSubtask = (index: number) => {
     <h2 class="text-[18px]">Add New Task</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input
-      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
+      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
       id="title"
       type="text"
       placeholder="e.g. Take coffee break"
@@ -93,7 +92,7 @@ const removeSubtask = (index: number) => {
     />
     <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
     <textarea
-      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
+      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
       id="description"
       rows="4"
       cols="50"
@@ -110,7 +109,7 @@ recharge the batteries a little."
         :key="index"
       >
         <input
-          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-red-500"
+          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
           type="text"
           placeholder="e.g. Make coffee"
           v-model="taskForm.subtasks[index]"
@@ -122,7 +121,7 @@ recharge the batteries a little."
             'shrink-0',
             isCreatingTask
               ? 'cursor-not-allowed opacity-50 text-(--cst-foreground)/50'
-              : 'cursor-pointer text-(--cst-foreground) hover:text-red-500',
+              : 'cursor-pointer text-(--cst-foreground) hover:text-(--cst-destructive)',
           ]"
           @click="!isCreatingTask && removeSubtask(index)"
         />

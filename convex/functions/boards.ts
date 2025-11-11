@@ -110,3 +110,31 @@ export const updateTaskStatus = mutation({
     await ctx.db.patch(taskId, { columnId: newColumnId });
   },
 });
+
+export const createTask = mutation({
+  args: {
+    task: v.object({
+      title: v.string(),
+      description: v.optional(v.string()),
+      boardId: v.id("boards"),
+      columnId: v.id("columns"),
+      subtasks: v.array(v.object({ title: v.string(), isCompleted: v.boolean() })),
+    }),
+  },
+  handler: async (ctx, { task }) => {
+    const newTaskId = await ctx.db.insert("tasks", {
+      title: task.title,
+      description: task.description,
+      boardId: task.boardId,
+      columnId: task.columnId,
+    });
+
+    for (const subtask of task.subtasks) {
+      await ctx.db.insert("subtasks", {
+        title: subtask.title,
+        isCompleted: subtask.isCompleted,
+        taskId: newTaskId,
+      });
+    }
+  },
+});

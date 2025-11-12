@@ -14,7 +14,7 @@ const { showTaskModal } = taskModalStore;
 
 <template>
   <nav
-    class="h-24 w-full bg-(--cst-bg2) flex justify-between items-center px-8 border border-(--cst-lines)"
+    class="h-24 w-full bg-(--cst-bg2) flex justify-between items-center px-8 border border-(--cst-lines) select-none"
   >
     <div>
       <!-- skeleton for board name -->

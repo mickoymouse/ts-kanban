@@ -35,7 +35,7 @@ watch(
 );
 </script>
 <template>
-  <div class="flex flex-col h-full w-full">
+  <div class="flex flex-col h-full w-full select-none">
     <div v-if="isPending" class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide">
       <div v-for="i in 3" :key="i" class="flex flex-col gap-4">
         <!-- Column header skeleton -->

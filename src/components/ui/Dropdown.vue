@@ -56,7 +56,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="dropdownRef">
+  <div ref="dropdownRef" class="select-none">
     <button
       ref="buttonRef"
       class="relative w-full bg-(--cst-bg2) flex justify-between items-center border border-(--cst-foreground)/25 p-3 rounded-md font-medium text-[13px] cursor-pointer focus:border-(--cst-primary) focus:border-2 disabled:cursor-not-allowed"

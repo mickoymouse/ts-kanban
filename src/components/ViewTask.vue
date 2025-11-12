@@ -100,8 +100,8 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="flex gap-4 w-full justify-between relative">
-    <h2 class="text-[15px]">{{ task?.title }}</h2>
+  <div class="flex gap-4 w-full justify-between relative select-none">
+    <h2 class="text-[15px] select-text">{{ task?.title }}</h2>
     <OptionsIcon class="cursor-pointer shrink-0" @click="openTaskOptions" />
     <div
       v-show="showTaskOptions"
@@ -128,7 +128,7 @@ onUnmounted(() => {
   <p class="text-[12px] text-(--cst-foreground)">
     Subtasks ({{ taskCompleted }} of {{ totalTasks }})
   </p>
-  <ul class="flex flex-col gap-2">
+  <ul class="flex flex-col gap-2 select-none">
     <li
       v-for="subtask in task?.subtasks"
       :key="subtask._id"
@@ -142,7 +142,7 @@ onUnmounted(() => {
       />
     </li>
   </ul>
-  <p class="text-[12px] text-(--cst-foreground)">Current Status</p>
+  <p class="text-[12px] text-(--cst-foreground) select-none">Current Status</p>
   <Dropdown
     :options="columnNames"
     v-model="task.column"

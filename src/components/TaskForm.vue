@@ -64,7 +64,10 @@ const removeSubtask = (index: number) => {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="font-bold flex flex-col w-full gap-4 text-[13px]">
+  <form
+    @submit.prevent="handleSubmit"
+    class="font-bold flex flex-col w-full gap-4 text-[13px] select-none"
+  >
     <h2 class="text-[18px]">Add New Task</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input

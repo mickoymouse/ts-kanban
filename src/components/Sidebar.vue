@@ -44,7 +44,7 @@ watch(
 
 <template>
   <aside
-    class="min-w-[300px] max-w-[300px] bg-(--cst-bg2) border border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold"
+    class="min-w-[300px] max-w-[300px] bg-(--cst-bg2) border border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none"
   >
     <div class="h-24 flex items-center px-6">
       <LogoDark v-if="!isDarkMode" />

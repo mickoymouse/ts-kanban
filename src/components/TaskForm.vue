@@ -114,7 +114,7 @@ recharge the batteries a little."
       </div>
     </fieldset>
     <button
-      class="bg-(--cst-primary)/10 h-10 rounded-full text-(--cst-primary) cursor-pointer hover:bg-(--cst-primary) hover:text-white transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)/10 disabled:text-(--cst-primary)"
+      class="bg-(--cst-primary)/10 dark:bg-white dark:text-(--cst-primary) h-10 rounded-full text-(--cst-primary) cursor-pointer hover:bg-(--cst-primary-hover) hover:text-white dark:hover:bg-(--cst-primary-hover) dark:hover:text-white transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)/10 disabled:text-(--cst-primary)"
       @click="addSubtask"
       type="button"
       :disabled="isExecuting"
@@ -123,7 +123,7 @@ recharge the batteries a little."
     </button>
     <Dropdown :options="columnNames" v-model="taskForm.status" :disabled="isExecuting" />
     <button
-      class="flex items-center justify-center gap-2 bg-(--cst-primary) h-10 rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)"
+      class="flex items-center justify-center gap-2 bg-(--cst-primary) dark:bg-(--cst-primary) dark:text-white h-10 rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) dark:hover:bg-(--cst-primary-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)"
       type="submit"
       :disabled="isExecuting"
     >

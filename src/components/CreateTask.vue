@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, nextTick, reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useConvexMutation } from "convex-vue";
-import { LoaderCircle } from "lucide-vue-next";
 import { useToast } from "vue-toastification";
 
-import Dropdown from "@/components/ui/Dropdown.vue";
 import { useBoardStore } from "@/stores/Board";
-import CrossIcon from "@/icons/icon-cross.svg";
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import { useTaskModalStore } from "@/stores/Task";
+import TaskForm from "@/components/TaskForm.vue";
 
 const toast = useToast();
 const boardStore = useBoardStore();
@@ -37,8 +35,6 @@ const taskForm = reactive({
 
 const isCreatingTask = ref(false);
 
-const subtaskRefs: (HTMLInputElement | null)[] = [];
-
 const createTask = useConvexMutation(api.functions.tasks.createTask);
 
 const createTaskHandler = async () => {
@@ -64,89 +60,14 @@ const createTaskHandler = async () => {
     isCreatingTask.value = false;
   }
 };
-
-const addSubtask = async () => {
-  taskForm.subtasks.push("");
-  await nextTick();
-  const lastIndex = taskForm.subtasks.length - 1;
-  subtaskRefs[lastIndex]?.focus();
-};
-
-const removeSubtask = (index: number) => {
-  taskForm.subtasks.splice(index, 1);
-  subtaskRefs.splice(index, 1);
-};
 </script>
 
 <template>
-  <form
-    @submit.prevent="createTaskHandler"
-    class="font-bold flex flex-col w-full gap-4 text-[13px]"
-  >
-    <h2 class="text-[18px]">Add New Task</h2>
-    <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
-    <input
-      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
-      id="title"
-      type="text"
-      placeholder="e.g. Take coffee break"
-      v-model="taskForm.title"
-      :disabled="isCreatingTask"
-      required
-    />
-    <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
-    <textarea
-      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
-      id="description"
-      rows="4"
-      cols="50"
-      placeholder="e.g. It's always good to take a break. This 15 minute break will 
-recharge the batteries a little."
-      v-model="taskForm.description"
-      :disabled="isCreatingTask"
-    ></textarea>
-    <fieldset class="flex flex-col gap-2" :disabled="isCreatingTask">
-      <legend class="text-[12px] text-(--cst-foreground) pb-4">Subtasks</legend>
-      <div
-        class="flex items-center gap-4 w-full"
-        v-for="(_, index) in taskForm.subtasks"
-        :key="index"
-      >
-        <input
-          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
-          type="text"
-          placeholder="e.g. Make coffee"
-          v-model="taskForm.subtasks[index]"
-          :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
-          required
-        />
-        <CrossIcon
-          :class="[
-            'shrink-0',
-            isCreatingTask
-              ? 'cursor-not-allowed opacity-50 text-(--cst-foreground)/50'
-              : 'cursor-pointer text-(--cst-foreground) hover:text-(--cst-destructive)',
-          ]"
-          @click="!isCreatingTask && removeSubtask(index)"
-        />
-      </div>
-    </fieldset>
-    <button
-      class="bg-(--cst-primary)/10 h-10 rounded-full text-(--cst-primary) cursor-pointer hover:bg-(--cst-primary) hover:text-white transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)/10 disabled:text-(--cst-primary)"
-      @click="addSubtask"
-      type="button"
-      :disabled="isCreatingTask"
-    >
-      + Add New Subtask
-    </button>
-    <Dropdown :options="columnNames" v-model="taskForm.status" :disabled="isCreatingTask" />
-    <button
-      class="flex items-center justify-center gap-2 bg-(--cst-primary) h-10 rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors disabled:cursor-not-allowed disabled:hover:bg-(--cst-primary)"
-      type="submit"
-      :disabled="isCreatingTask"
-    >
-      {{ isCreatingTask ? "Creating task" : "Create Task" }}
-      <LoaderCircle v-if="isCreatingTask" class="mr-3 size-5 animate-spin text-white" />
-    </button>
-  </form>
+  <TaskForm
+    :isExecuting="isCreatingTask"
+    :taskForm="taskForm"
+    :columnNames="columnNames"
+    taskAction="create"
+    @createTask="createTaskHandler"
+  />
 </template>

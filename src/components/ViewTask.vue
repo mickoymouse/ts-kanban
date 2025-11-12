@@ -12,7 +12,6 @@ import OptionsIcon from "@/icons/icon-vertical-ellipsis.svg";
 import { useTaskModalStore, type Task } from "@/stores/Task";
 
 const props = defineProps<{
-  show: boolean;
   task: Task;
 }>();
 
@@ -23,7 +22,7 @@ const totalTasks = computed(() => props.task.subtasks.length ?? 0);
 
 const boardStore = useBoardStore();
 const taskModalStore = useTaskModalStore();
-const { closeTaskModal, setTaskToDelete, showDeleteModal } = taskModalStore;
+const { closeTaskModal, setTaskToDelete, showDeleteModal, setTaskAction } = taskModalStore;
 const { columns } = storeToRefs(boardStore);
 
 const columnNames = computed(() => columns.value.map((column) => column.name));
@@ -62,6 +61,7 @@ const updateTaskStatusHandler = async (taskId: Id<"tasks">, columnName: string) 
 
 const editTask = () => {
   closeTaskOptions();
+  setTaskAction("edit");
 };
 
 const deleteTask = () => {

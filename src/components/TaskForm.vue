@@ -9,8 +9,14 @@ import { computed, nextTick } from "vue";
 export interface TaskForm {
   title: string;
   description?: string;
-  subtasks: string[];
+  subtasks: Subtask[];
   status: string | null;
+}
+
+export interface Subtask {
+  id: string;
+  title: string;
+  isCompleted: boolean;
 }
 
 const props = defineProps<{
@@ -31,21 +37,21 @@ const taskButtonLabel = computed(() => {
 
 const emit = defineEmits<{
   (e: "createTask", taskForm: TaskForm): void;
-  (e: "editTask", taskForm: TaskForm): void;
+  (e: "updateTask", taskForm: TaskForm): void;
 }>();
 
 const handleSubmit = () => {
   if (props.taskAction == "create") {
     emit("createTask", props.taskForm);
   } else if (props.taskAction == "edit") {
-    emit("editTask", props.taskForm);
+    emit("updateTask", props.taskForm);
   }
 };
 
 const subtaskRefs: (HTMLInputElement | null)[] = [];
 
 const addSubtask = async () => {
-  props.taskForm.subtasks.push("");
+  props.taskForm.subtasks.push({ id: "new", title: "", isCompleted: false });
   await nextTick();
   const lastIndex = props.taskForm.subtasks.length - 1;
   subtaskRefs[lastIndex]?.focus();
@@ -92,7 +98,7 @@ recharge the batteries a little."
           class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
           type="text"
           placeholder="e.g. Make coffee"
-          v-model="taskForm.subtasks[index]"
+          v-model="taskForm.subtasks[index]!.title"
           :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
           required
         />

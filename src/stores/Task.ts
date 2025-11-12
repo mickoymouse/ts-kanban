@@ -36,6 +36,10 @@ export const useTaskModalStore = defineStore("taskModal", () => {
     }
   };
 
+  const setTaskAction = (action: TaskAction) => {
+    taskAction.value = action;
+  };
+
   const setTaskToDelete = (taskData: Task | null) => {
     taskToDelete.value = taskData;
   };
@@ -63,5 +67,6 @@ export const useTaskModalStore = defineStore("taskModal", () => {
     showDelete,
     showDeleteModal,
     closeDeleteModal,
+    setTaskAction,
   };
 });

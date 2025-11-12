@@ -7,9 +7,8 @@ import { useToast } from "vue-toastification";
 import { useBoardStore } from "@/stores/Board";
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
-import { useTaskModalStore } from "@/stores/Task";
+import { useTaskModalStore, type Task } from "@/stores/Task";
 import TaskForm from "@/components/TaskForm.vue";
-import type { Subtask } from "@/components/TaskForm.vue";
 
 const toast = useToast();
 const boardStore = useBoardStore();
@@ -26,49 +25,63 @@ const columnNameToIdMap = computed(() => {
   return map;
 });
 
+const props = defineProps<{
+  task: Task;
+}>();
+
 const taskForm = reactive({
-  title: "",
-  description: "" as string | undefined,
-  subtasks: [{ id: "new", title: "", isCompleted: false }] as Subtask[],
-  status: (columnNames.value[0] as string) || null,
+  title: props.task.title,
+  description: props.task.description || undefined,
+  subtasks: props.task.subtasks.map((subtask) => {
+    const s = {
+      id: subtask._id,
+      title: subtask.title,
+      isCompleted: subtask.isCompleted,
+    };
+
+    return s;
+  }),
+  status: props.task.column,
 });
 
-const isCreatingTask = ref(false);
+const isUpdatingTask = ref(false);
 
-const createTask = useConvexMutation(api.functions.tasks.createTask);
+const updateTask = useConvexMutation(api.functions.tasks.updateTask);
 
-const createTaskHandler = async () => {
-  isCreatingTask.value = true;
+const updateTaskHandler = async () => {
+  isUpdatingTask.value = true;
   try {
-    await createTask.mutate({
+    await updateTask.mutate({
+      taskId: props.task._id as Id<"tasks">,
       task: {
         title: taskForm.title,
         description: taskForm.description,
         boardId: board.value?.id as Id<"boards">,
         columnId: columnNameToIdMap.value[taskForm.status as string] as Id<"columns">,
         subtasks: taskForm.subtasks.map((subtask) => ({
+          _id: subtask.id,
           title: subtask.title,
           isCompleted: false,
         })),
       },
     });
-    toast.success("Task created successfully!");
+    toast.success("Task updated successfully!");
     closeTaskModal();
   } catch (error) {
-    console.error("Error creating task:", error);
-    toast.error("Failed to create task. Please try again.");
+    console.error("Error updating task:", error);
+    toast.error("Failed to update task. Please try again.");
   } finally {
-    isCreatingTask.value = false;
+    isUpdatingTask.value = false;
   }
 };
 </script>
 
 <template>
   <TaskForm
-    :isExecuting="isCreatingTask"
+    :isExecuting="isUpdatingTask"
     :taskForm="taskForm"
     :columnNames="columnNames"
-    taskAction="create"
-    @createTask="createTaskHandler"
+    taskAction="edit"
+    @updateTask="updateTaskHandler"
   />
 </template>

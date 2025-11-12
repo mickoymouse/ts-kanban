@@ -1,3 +1,4 @@
+import type { Id } from "../_generated/dataModel";
 import { query, mutation } from "../_generated/server";
 import { v } from "convex/values";
 
@@ -102,5 +103,73 @@ export const deleteTask = mutation({
   args: { taskId: v.id("tasks") },
   handler: async (ctx, { taskId }) => {
     await ctx.db.delete(taskId);
+  },
+});
+
+export const updateTask = mutation({
+  args: {
+    taskId: v.id("tasks"),
+    task: v.object({
+      title: v.string(),
+      description: v.optional(v.string()),
+      boardId: v.id("boards"),
+      columnId: v.id("columns"),
+      subtasks: v.array(v.object({ _id: v.string(), title: v.string(), isCompleted: v.boolean() })),
+    }),
+  },
+  handler: async (ctx, { task, taskId }) => {
+    await ctx.db.patch(taskId, {
+      title: task.title,
+      description: task.description,
+      columnId: task.columnId,
+    });
+
+    const existingSubtasks = await ctx.db
+      .query("subtasks")
+      .withIndex("by_task", (q) => q.eq("taskId", taskId))
+      .collect();
+
+    const updates: Promise<any>[] = [];
+    const deletes: Promise<any>[] = [];
+    const inserts: Promise<any>[] = [];
+
+    const existingSubtaskIds = new Set(existingSubtasks.map((subtask) => subtask._id.toString()));
+    // patch and inserts
+    for (const subtask of task.subtasks) {
+      if (!subtask._id || subtask._id === "new") {
+        inserts.push(
+          ctx.db.insert("subtasks", {
+            title: subtask.title,
+            isCompleted: subtask.isCompleted,
+            taskId: taskId,
+          }),
+        );
+      } else {
+        // just to be safe, check if it exists
+        if (existingSubtaskIds.has(subtask._id.toString())) {
+          updates.push(
+            ctx.db.patch(subtask._id as Id<"subtasks">, {
+              title: subtask.title,
+              isCompleted: subtask.isCompleted,
+            }),
+          );
+        }
+      }
+    }
+
+    const remainingSubtaskIds = new Set(
+      task.subtasks
+        .filter((subtask) => subtask._id && subtask._id !== "new")
+        .map((subtask) => subtask._id.toString()),
+    );
+
+    // deletes
+    for (const existingSubtask of existingSubtasks) {
+      if (!remainingSubtaskIds.has(existingSubtask._id.toString())) {
+        deletes.push(ctx.db.delete(existingSubtask._id));
+      }
+    }
+
+    await Promise.all([...updates, ...deletes, ...inserts]);
   },
 });

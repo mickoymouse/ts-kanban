@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { computed, watch } from "vue";
+import { storeToRefs } from "pinia";
 
 import { useBoardStore } from "@/stores/Board";
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import TaskColumn from "@/components/TaskColumn.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
+import TaskModal from "@/components/TaskModal.vue";
+import DeleteModal from "@/components/DeleteModal.vue";
+import { useTaskModalStore } from "@/stores/Task";
 
 const boardStore = useBoardStore();
 const { setColumns } = boardStore;
+
+const taskModalStore = useTaskModalStore();
+const { show, showDelete } = storeToRefs(taskModalStore);
 const route = useRoute();
 const boardId = computed(() => route.params.boardId as Id<"boards">);
 
@@ -69,4 +76,6 @@ watch(
       </div>
     </div>
   </div>
+  <TaskModal v-if="show" />
+  <DeleteModal v-else-if="showDelete" />
 </template>

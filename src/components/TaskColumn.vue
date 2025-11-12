@@ -5,17 +5,12 @@ import { storeToRefs } from "pinia";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import TaskCard from "@/components/TaskCard.vue";
-import TaskModal from "@/components/TaskModal.vue";
-import DeleteModal from "@/components/DeleteModal.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 import { useTaskModalStore } from "@/stores/Task";
 
 const props = defineProps<{
   columnId: Id<"columns">;
 }>();
-
-const taskModalStore = useTaskModalStore();
-const { show, showDelete } = storeToRefs(taskModalStore);
 
 const columnId = computed(() => props.columnId);
 
@@ -35,8 +30,5 @@ const { data: tasks, isPending } = useLocalConvexQuery(api.functions.tasks.getTa
       </div>
     </div>
     <TaskCard v-else v-for="task in tasks" :key="task._id" :task="task" />
-
-    <TaskModal v-if="show" />
-    <DeleteModal v-else-if="showDelete" />
   </div>
 </template>

@@ -113,3 +113,19 @@ export const updateBoard = mutation({
     await Promise.all([...updates, ...deletes, ...inserts]);
   },
 });
+
+export const deleteBoard = mutation({
+  args: { boardId: v.id("boards") },
+  handler: async (ctx, { boardId }) => {
+    const columns = await ctx.db
+      .query("columns")
+      .withIndex("by_board", (q) => q.eq("boardId", boardId))
+      .collect();
+
+    const columnIds = columns.map((col) => col._id);
+    const deleteColumnsPromises = columnIds.map((colId) => ctx.db.delete(colId));
+
+    await Promise.all(deleteColumnsPromises);
+    await ctx.db.delete(boardId);
+  },
+});

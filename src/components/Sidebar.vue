@@ -2,6 +2,7 @@
 import { watch, computed } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useConvexQuery } from "convex-vue";
+import { storeToRefs } from "pinia";
 
 import { api } from "../../convex/_generated/api";
 import { useBoardStore } from "@/stores/Board";
@@ -13,28 +14,35 @@ import LightIcon from "@/icons/icon-light-theme.svg";
 import DarkIcon from "@/icons/icon-dark-theme.svg";
 import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
+import Boardmodal from "@/components/Boardmodal.vue";
+import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 
 const boardStore = useBoardStore();
+const { setBoard, setDefaultBoard, setLoading } = boardStore;
 const { openBoardModal } = boardStore;
+const { showModal } = storeToRefs(boardStore);
+
 const { isDarkMode, toggleTheme } = useTheme();
 const router = useRouter();
 const route = useRoute();
 const user: string = "default_user";
-const { data: boards, isPending } = useConvexQuery(api.functions.boards.getBoards, { user });
+const { data: boards, isPending } = useLocalConvexQuery(api.functions.boards.getBoards, { user });
 const boardsCount = computed(() => (boards.value ? boards.value.length : 0));
 const currentBoardId = computed(() => route.params.boardId as string);
 
 watch(
   isPending,
   (pending) => {
-    boardStore.setLoading(pending);
+    console.log("Boards loading:", pending);
+    setLoading(pending);
     if (!pending) {
       if (!boards.value || boards.value.length === 0) {
         router.replace({ name: "kanban" });
-        boardStore.setBoard(null);
+        setBoard(null);
       } else if (boards.value[0]) {
         const firstBoard = boards.value[0];
-        boardStore.setBoard(firstBoard);
+        setBoard(firstBoard);
+        setDefaultBoard(firstBoard);
         router.replace({ name: "board", params: { boardId: firstBoard._id } });
       }
     }
@@ -125,4 +133,5 @@ watch(
       </div>
     </div>
   </aside>
+  <Boardmodal v-if="showModal" />
 </template>

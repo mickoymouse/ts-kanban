@@ -17,6 +17,7 @@ export const useBoardStore = defineStore("board", () => {
   const isLoading = ref(false);
   const showModal = ref(false);
   const showDeleteModal = ref(false);
+  const defaultBoard = ref<Board | null>(null);
 
   const setBoard = (boardData: Board | null) => {
     board.value = boardData;
@@ -39,6 +40,18 @@ export const useBoardStore = defineStore("board", () => {
     showModal.value = false;
   };
 
+  const openDeleteModal = () => {
+    showDeleteModal.value = true;
+  };
+
+  const closeDeleteModal = () => {
+    showDeleteModal.value = false;
+  };
+
+  const setDefaultBoard = (boardData: Board | null) => {
+    defaultBoard.value = boardData;
+  };
+
   return {
     board,
     boardAction,
@@ -50,5 +63,9 @@ export const useBoardStore = defineStore("board", () => {
     setColumns,
     closeBoardModal,
     openBoardModal,
+    closeDeleteModal,
+    openDeleteModal,
+    defaultBoard,
+    setDefaultBoard,
   };
 });

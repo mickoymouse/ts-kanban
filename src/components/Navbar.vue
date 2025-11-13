@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { onMounted, onUnmounted, ref, type Ref } from "vue";
 
 import { useBoardStore } from "@/stores/Board";
 import OptionsButton from "@/icons/icon-vertical-ellipsis.svg";
 import { useTaskModalStore } from "@/stores/Task";
-import { onMounted, onUnmounted, ref, type Ref } from "vue";
+import DeleteBoardModal from "@/components/DeleteBoardModal.vue";
 
 const boardStore = useBoardStore();
-const { openBoardModal } = boardStore;
-const { board, isLoading } = storeToRefs(boardStore);
+const { openBoardModal, openDeleteModal } = boardStore;
+const { board, isLoading, showDeleteModal } = storeToRefs(boardStore);
 
 const taskModalStore = useTaskModalStore();
 const { showTaskModal } = taskModalStore;
@@ -37,7 +38,10 @@ const editBoard = () => {
   openBoardModal("edit");
   closeBoardOptions();
 };
-const deleteBoard = () => {};
+const deleteBoard = () => {
+  closeBoardOptions();
+  openDeleteModal();
+};
 
 onMounted(() => {
   document.addEventListener("click", boardOptionsClickOutside);
@@ -86,4 +90,5 @@ onUnmounted(() => {
       </div>
     </div>
   </nav>
+  <DeleteBoardModal v-if="showDeleteModal" />
 </template>

@@ -5,12 +5,10 @@ export type BoardAction = "create" | "edit";
 export type Board = {
   _id: string;
   name: string;
-  columns:
-    | Array<{
-        _id: string;
-        name: string;
-      }>
-    | undefined;
+  columns: Array<{
+    _id: string;
+    name: string;
+  }>;
 };
 
 export const useBoardStore = defineStore("board", () => {

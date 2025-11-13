@@ -4,7 +4,7 @@ import { computed, ref, watch } from "vue";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import TaskCard from "@/components/TaskCard.vue";
-import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
+import { useConvexQuery } from "convex-vue";
 
 const props = defineProps<{
   columnId: Id<"columns">;
@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const columnId = computed(() => props.columnId);
 
-const { data: tasks, isPending } = useLocalConvexQuery(api.functions.tasks.getTasks, () => ({
+const { data: tasks, isPending } = useConvexQuery(api.functions.tasks.getTasks, () => ({
   columnId: columnId.value,
 }));
 
@@ -64,19 +64,16 @@ watch(
 </template>
 
 <style scoped>
-.task-card-move,
+.task-card-list-move,
 .task-card-list-enter-active,
 .task-card-list-leave-active {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease;
 }
 
-.task-card-list-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
-}
+.task-card-list-enter-from,
 .task-card-list-leave-to {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateX(30px);
 }
 
 .task-card-list-leave-active {

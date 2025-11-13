@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from "@/components/Navbar.vue";
+import Header from "@/components/Header.vue";
 import Sidebar from "@/components/Sidebar.vue";
 </script>
 
@@ -7,7 +7,7 @@ import Sidebar from "@/components/Sidebar.vue";
   <div class="flex w-full h-screen overflow-hidden">
     <Sidebar />
     <div class="flex-1 flex flex-col h-full overflow-hidden">
-      <Navbar />
+      <Header />
       <main class="flex-1 w-full flex flex-start overflow-auto">
         <RouterView />
       </main>

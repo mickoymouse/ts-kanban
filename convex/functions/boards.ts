@@ -53,7 +53,17 @@ export const createBoard = mutation({
     }
     await Promise.all(columnInserts);
 
-    return boardId;
+    const newBoard = await ctx.db.get(boardId);
+    if (!newBoard) {
+      throw new Error("Failed to retrieve the newly created board.");
+    }
+
+    const columns = await ctx.db
+      .query("columns")
+      .withIndex("by_board", (q) => q.eq("boardId", boardId))
+      .collect();
+
+    return { ...newBoard, columns };
   },
 });
 

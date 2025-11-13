@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { ref } from "vue";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export type BoardAction = "create" | "edit";
 export type Board = {
-  _id: string;
+  _id: Id<"boards">;
   name: string;
   columns: Array<{
-    _id: string;
+    _id: Id<"columns">;
     name: string;
   }>;
 };
@@ -17,17 +18,19 @@ export const useBoardStore = defineStore("board", () => {
   const isLoading = ref(false);
   const showModal = ref(false);
   const showDeleteModal = ref(false);
-  const defaultBoard = ref<Board | null>(null);
+  const currentBoard = ref<Board | null>(null);
+  const refreshBoard = ref(0);
 
   const setBoard = (boardData: Board | null) => {
     board.value = boardData;
+    currentBoard.value = boardData;
   };
 
   const setLoading = (loading: boolean) => {
     isLoading.value = loading;
   };
 
-  const setColumns = (newColumns: Array<{ _id: string; name: string }>) => {
+  const setColumns = (newColumns: Array<{ _id: Id<"columns">; name: string }>) => {
     if (board.value) board.value.columns = newColumns;
   };
 
@@ -44,12 +47,21 @@ export const useBoardStore = defineStore("board", () => {
     showDeleteModal.value = true;
   };
 
-  const closeDeleteModal = () => {
+  const closeDeleteModal = (reset = true) => {
     showDeleteModal.value = false;
+    if (reset) {
+      board.value = null;
+      currentBoard.value = null;
+      boardAction.value = null;
+    }
   };
 
-  const setDefaultBoard = (boardData: Board | null) => {
-    defaultBoard.value = boardData;
+  const refreshBoardHandler = () => {
+    refreshBoard.value += 1;
+  };
+
+  const setCurrentBoard = (boardData: Board | null) => {
+    currentBoard.value = boardData;
   };
 
   return {
@@ -65,7 +77,9 @@ export const useBoardStore = defineStore("board", () => {
     openBoardModal,
     closeDeleteModal,
     openDeleteModal,
-    defaultBoard,
-    setDefaultBoard,
+    currentBoard,
+    setCurrentBoard,
+    refreshBoard,
+    refreshBoardHandler,
   };
 });

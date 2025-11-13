@@ -13,7 +13,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 const toast = useToast();
 const boardStore = useBoardStore();
 const { showDeleteModal, board } = storeToRefs(boardStore);
-const { closeDeleteModal } = boardStore;
+const { closeDeleteModal, refreshBoardHandler } = boardStore;
 const isDeletingBoard = ref(false);
 
 const deleteBoardMutation = useConvexMutation(api.functions.boards.deleteBoard);
@@ -22,7 +22,8 @@ const deleteBoard = async () => {
   isDeletingBoard.value = true;
   try {
     await deleteBoardMutation.mutate({ boardId: board.value!._id as Id<"boards"> });
-    closeDeleteModal();
+    refreshBoardHandler();
+    closeDeleteModal(true);
     toast.success("Board deleted successfully!");
   } catch (error) {
     console.error("Error deleting board:", error);

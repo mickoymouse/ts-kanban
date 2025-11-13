@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { watch, computed } from "vue";
+import { watch, computed, onMounted, ref } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
-import { useConvexQuery } from "convex-vue";
 import { storeToRefs } from "pinia";
 
 import { api } from "../../convex/_generated/api";
@@ -18,9 +17,9 @@ import Boardmodal from "@/components/Boardmodal.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 
 const boardStore = useBoardStore();
-const { setBoard, setDefaultBoard, setLoading } = boardStore;
-const { openBoardModal } = boardStore;
-const { showModal } = storeToRefs(boardStore);
+const { setBoard, setLoading } = boardStore;
+const { openBoardModal, setCurrentBoard } = boardStore;
+const { showModal, currentBoard, refreshBoard } = storeToRefs(boardStore);
 
 const { isDarkMode, toggleTheme } = useTheme();
 const router = useRouter();
@@ -29,25 +28,39 @@ const user: string = "default_user";
 const { data: boards, isPending } = useLocalConvexQuery(api.functions.boards.getBoards, { user });
 const boardsCount = computed(() => (boards.value ? boards.value.length : 0));
 const currentBoardId = computed(() => route.params.boardId as string);
+const isInitialLoad = ref(true);
+
+const boardRoutingHandler = () => {
+  if (!boards.value || boards.value.length === 0) {
+    console.log("No boards available, redirecting to kanban overview.");
+    router.replace({ name: "kanban" });
+    setBoard(null);
+  } else if (!currentBoard.value) {
+    console.log("No current board selected, redirecting to the first board.");
+    const firstBoard = boards.value[0];
+    if (firstBoard) {
+      setBoard(firstBoard);
+      setCurrentBoard(firstBoard);
+      router.replace({ name: "board", params: { boardId: firstBoard._id } });
+    }
+  }
+};
 
 watch(
   isPending,
-  (pending) => {
-    setLoading(pending);
-    if (!pending) {
-      if (!boards.value || boards.value.length === 0) {
-        router.replace({ name: "kanban" });
-        setBoard(null);
-      } else if (boards.value[0]) {
-        const firstBoard = boards.value[0];
-        setBoard(firstBoard);
-        setDefaultBoard(firstBoard);
-        router.replace({ name: "board", params: { boardId: firstBoard._id } });
+  (newVal) => {
+    if (isInitialLoad.value) {
+      setLoading(newVal);
+      if (!newVal) {
+        isInitialLoad.value = false;
+        boardRoutingHandler();
       }
     }
   },
   { immediate: true },
 );
+
+watch(refreshBoard, boardRoutingHandler);
 </script>
 
 <template>
@@ -58,7 +71,10 @@ watch(
       <LogoDark v-if="!isDarkMode" />
       <LogoLight v-else />
     </div>
-    <div v-if="isPending" class="h-[calc(100vh-96px)] flex flex-col justify-between">
+    <div
+      v-if="isPending && isInitialLoad"
+      class="h-[calc(100vh-96px)] flex flex-col justify-between"
+    >
       <div class="flex flex-col pr-6 gap-4">
         <!-- Skeleton for "All Boards" heading -->
         <div class="px-6">
@@ -97,23 +113,25 @@ watch(
     <div v-else class="h-[calc(100vh-96px)] flex flex-col justify-between">
       <div class="flex flex-col pr-6 gap-4">
         <p class="px-6 text-[12px]">All Boards ( {{ boardsCount }} )</p>
-        <ul class="flex flex-col gap-4">
-          <RouterLink
-            v-for="board in boards"
-            :key="board._id"
-            :to="{ name: 'board', params: { boardId: board._id } }"
-            class="flex items-center gap-2 px-6 py-2 rounded-r-full cursor-pointer"
-            :class="{
-              'bg-(--cst-primary) text-white': currentBoardId === board._id,
-              'hover:bg-(--cst-bg)': currentBoardId !== board._id,
-            }"
-            tag="li"
-            @click="boardStore.setBoard(board)"
-          >
-            <ListIcon />
-            <span>{{ board.name }}</span>
-          </RouterLink>
-        </ul>
+        <nav aria-label="Navigation main sidebar">
+          <ul class="flex flex-col gap-4">
+            <RouterLink
+              v-for="board in boards"
+              :key="board._id"
+              :to="{ name: 'board', params: { boardId: board._id } }"
+              class="flex items-center gap-2 px-6 py-2 rounded-r-full cursor-pointer"
+              :class="{
+                'bg-(--cst-primary) text-white': currentBoardId === board._id,
+                'hover:bg-(--cst-bg)': currentBoardId !== board._id,
+              }"
+              tag="li"
+              @click="boardStore.setBoard(board)"
+            >
+              <ListIcon />
+              <span>{{ board.name }}</span>
+            </RouterLink>
+          </ul>
+        </nav>
         <p
           class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer"
           @click="openBoardModal('create')"

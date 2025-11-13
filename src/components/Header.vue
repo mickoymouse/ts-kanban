@@ -53,7 +53,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav
+  <header
     class="h-24 w-full bg-(--cst-bg2) flex justify-between items-center px-8 border border-(--cst-lines) select-none"
   >
     <div>
@@ -93,6 +93,6 @@ onUnmounted(() => {
         </button>
       </div>
     </div>
-  </nav>
+  </header>
   <DeleteBoardModal v-if="showDeleteModal" />
 </template>

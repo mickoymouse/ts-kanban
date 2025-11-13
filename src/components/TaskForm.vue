@@ -71,7 +71,7 @@ const removeSubtask = (index: number) => {
     <h2 class="text-[18px]">Add New Task</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input
-      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
+      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
       id="title"
       type="text"
       placeholder="e.g. Take coffee break"
@@ -81,7 +81,7 @@ const removeSubtask = (index: number) => {
     />
     <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
     <textarea
-      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
+      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
       id="description"
       rows="4"
       cols="50"
@@ -98,7 +98,7 @@ recharge the batteries a little."
         :key="index"
       >
         <input
-          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
+          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
           type="text"
           placeholder="e.g. Make coffee"
           v-model="taskForm.subtasks[index]!.title"

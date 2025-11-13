@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { LoaderCircle } from "lucide-vue-next";
+import * as z from "zod";
+import { ref } from "vue";
 
 import Dropdown from "@/components/ui/Dropdown.vue";
 import CrossIcon from "@/icons/icon-cross.svg";
@@ -26,6 +28,49 @@ const props = defineProps<{
   taskAction: TaskAction;
 }>();
 
+const taskFormSchema = z.object({
+  title: z
+    .string()
+    .min(3, "Title must be at least 3 characters long.")
+    .max(75, "Title must be at most 75 characters long."),
+  description: z.string().max(500, "Description must be at most 500 characters long.").optional(),
+  subtasks: z.array(
+    z.object({
+      id: z.string(),
+      title: z
+        .string()
+        .min(3, "Subtask title must be at least 3 characters long.")
+        .max(75, "Subtask title must be at most 75 characters long."),
+    }),
+  ),
+});
+
+const taskFormErrors = ref<any>(null);
+
+const validateTaskForm = () => {
+  try {
+    const result = taskFormSchema.safeParse(props.taskForm);
+    if (!result.success) {
+      taskFormErrors.value = z.treeifyError(result.error);
+      throw taskFormErrors.value;
+    }
+    return true;
+  } catch (error) {
+    console.log("Validation error:", error);
+    return false;
+  }
+};
+
+const getFieldErrors = (fieldName: string) => {
+  const errs = taskFormErrors.value?.properties?.[fieldName]?.errors ?? [];
+  return errs.join(" ");
+};
+
+const taskTitle = computed(() => {
+  if (props.taskAction === "create") return "Add New Task";
+  if (props.taskAction === "edit") return "Edit Task";
+});
+
 const taskButtonLabel = computed(() => {
   const labels = {
     create: props.isExecuting ? "Creating task" : "Create task",
@@ -41,6 +86,7 @@ const emit = defineEmits<{
 }>();
 
 const handleSubmit = () => {
+  if (!validateTaskForm()) return;
   if (props.taskAction == "create") {
     emit("createTask", props.taskForm);
   } else if (props.taskAction == "edit") {
@@ -68,7 +114,7 @@ const removeSubtask = (index: number) => {
     @submit.prevent="handleSubmit"
     class="font-bold flex flex-col w-full gap-4 text-[13px] select-none"
   >
-    <h2 class="text-[18px]">Add New Task</h2>
+    <h2 class="text-[18px]">{{ taskTitle }}</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
     <input
       class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
@@ -77,8 +123,13 @@ const removeSubtask = (index: number) => {
       placeholder="e.g. Take coffee break"
       v-model="taskForm.title"
       :disabled="isExecuting"
-      required
     />
+    <p
+      v-if="getFieldErrors('title').length != 0"
+      class="text-[12px] font-medium text-(--cst-destructive)"
+    >
+      {{ getFieldErrors("title") }}
+    </p>
     <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
     <textarea
       class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
@@ -103,7 +154,6 @@ recharge the batteries a little."
           placeholder="e.g. Make coffee"
           v-model="taskForm.subtasks[index]!.title"
           :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
-          required
         />
         <CrossIcon
           :class="[

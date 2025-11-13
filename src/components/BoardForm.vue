@@ -29,6 +29,11 @@ const boardButtonLabel = computed(() => {
   return labels[props.boardAction];
 });
 
+const boardTitle = computed(() => {
+  if (props.boardAction === "create") return "Add New Board";
+  if (props.boardAction === "edit") return "Edit Board";
+});
+
 const emit = defineEmits<{
   (e: "createBoard", boardForm: BoardForm): void;
   (e: "updateBoard", boardForm: BoardForm): void;
@@ -62,7 +67,7 @@ const removeColumn = (index: number) => {
     @submit.prevent="handleSubmit"
     class="font-bold flex flex-col w-full gap-4 text-[13px] select-none"
   >
-    <h2 class="text-[18px]">Add New Board</h2>
+    <h2 class="text-[18px]">{{ boardTitle }}</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="name">Name</label>
     <input
       class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"

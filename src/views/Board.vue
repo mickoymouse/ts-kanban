@@ -9,7 +9,7 @@ import { api } from "../../convex/_generated/api";
 import TaskColumn from "@/components/TaskColumn.vue";
 import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 import TaskModal from "@/components/TaskModal.vue";
-import DeleteModal from "@/components/DeleteModal.vue";
+import DeleteTaskModal from "@/components/DeleteTaskModal.vue";
 import { useTaskModalStore } from "@/stores/Task";
 import Boardmodal from "@/components/Boardmodal.vue";
 
@@ -79,6 +79,6 @@ watch(
     </div>
   </div>
   <TaskModal v-if="show" />
-  <DeleteModal v-else-if="showDelete" />
+  <DeleteTaskModal v-else-if="showDelete" />
   <Boardmodal v-else-if="showModal" />
 </template>

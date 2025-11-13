@@ -61,7 +61,11 @@ onUnmounted(() => {
       <div v-if="isLoading" class="h-8 bg-gray-300 rounded animate-pulse w-48"></div>
       <h1 v-else class="text-[24px] font-bold">{{ board?.name }}</h1>
     </div>
-    <div class="flex items-center gap-4 relative">
+    <div v-if="isLoading" class="flex items-center gap-4">
+      <div class="h-10 bg-gray-300 rounded-full animate-pulse w-[164px]"></div>
+      <div class="w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+    </div>
+    <div v-else class="flex items-center gap-4 relative">
       <button
         class="bg-(--cst-primary) h-10 w-[164px] rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
         :disabled="isLoading || board == null"

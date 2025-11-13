@@ -68,13 +68,14 @@ onUnmounted(() => {
     <div v-else class="flex items-center gap-4 relative">
       <button
         class="bg-(--cst-primary) h-10 w-[164px] rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
-        :disabled="isLoading || board == null"
+        :disabled="isLoading || board == null || board.columns.length === 0"
         @click="showTaskModal('create')"
       >
         + Add New Task
       </button>
       <OptionsButton class="cursor-pointer" @click="openBoardOptions" />
       <div
+        :disabled="isLoading || board == null"
         v-show="showBoardOptions"
         ref="boardOptionsRef"
         class="bg-(--cst-bg2) flex flex-col gap-2 absolute right-0 top-full font-medium text-[13px] rounded-md shadow-md overflow-hidden"

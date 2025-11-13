@@ -22,7 +22,7 @@ const totalTasks = computed(() => props.task.subtasks.length ?? 0);
     @click="showTaskModal('view', task)"
   >
     <p class="text-[15px]">{{ task?.title }}</p>
-    <p class="text-[12px] text-(--cst-foreground)">
+    <p v-if="totalTasks != 0" class="text-[12px] text-(--cst-foreground)">
       {{ taskCompleted }} of {{ totalTasks }} subtasks
     </p>
   </div>

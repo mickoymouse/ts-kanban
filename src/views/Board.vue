@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useBoardStore } from "@/stores/Board";
@@ -11,6 +11,7 @@ import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 import TaskModal from "@/components/TaskModal.vue";
 import DeleteTaskModal from "@/components/DeleteTaskModal.vue";
 import { useTaskModalStore } from "@/stores/Task";
+import NumberFlow from "@/components/ui/NumberFlow.vue";
 
 const boardStore = useBoardStore();
 const { setColumns } = boardStore;
@@ -24,6 +25,25 @@ const { data: columns, isPending } = useLocalConvexQuery(api.functions.columns.g
   boardId: boardId.value,
 }));
 
+const isInitialLoad = ref(true);
+
+const taskCounts = ref<Record<string, number>>({});
+const updateTaskCount = (columnId: string, count: number) => {
+  taskCounts.value[columnId] = count;
+};
+
+watch(
+  isPending,
+  (newVal) => {
+    if (isInitialLoad.value) {
+      if (!newVal) {
+        isInitialLoad.value = false;
+      }
+    }
+  },
+  { immediate: true },
+);
+
 watch(
   columns,
   (newColumns) => {
@@ -36,7 +56,10 @@ watch(
 </script>
 <template>
   <div class="flex flex-col h-full w-full select-none">
-    <div v-if="isPending" class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide">
+    <div
+      v-if="isPending && isInitialLoad"
+      class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide"
+    >
       <div v-for="i in 3" :key="i" class="flex flex-col gap-4">
         <!-- Column header skeleton -->
         <div class="h-4 bg-gray-300 rounded animate-pulse w-32"></div>
@@ -70,9 +93,16 @@ watch(
     <div v-else class="w-full flex-1 flex gap-4 px-4 py-4 overflow-auto scrollbar-hide">
       <div v-for="column in columns" class="flex flex-col gap-4" :key="column._id">
         <p class="font-bold text-[12px] tracking-[2.4px] text-(--cst-foreground)">
-          {{ column.name.toUpperCase() }} ({{ column.tasks.length }})
+          <span>{{ column.name.toUpperCase() }}</span>
+          (<NumberFlow
+            :class="'font-bold text-[12px] tracking-[2.4px] text-(--cst-foreground)'"
+            :number="taskCounts[column._id] || 0"
+          />)
         </p>
-        <TaskColumn :column-id="column._id" />
+        <TaskColumn
+          :column-id="column._id"
+          @updateTaskCount="(count) => updateTaskCount(column._id, count)"
+        />
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, computed, onMounted, ref } from "vue";
+import { watch, computed, ref } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { storeToRefs } from "pinia";
 
@@ -14,7 +14,7 @@ import DarkIcon from "@/icons/icon-dark-theme.svg";
 import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
 import Boardmodal from "@/components/Boardmodal.vue";
-import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
+import { useConvexQuery } from "convex-vue";
 
 const boardStore = useBoardStore();
 const { setBoard, setLoading } = boardStore;
@@ -25,7 +25,7 @@ const { isDarkMode, toggleTheme } = useTheme();
 const router = useRouter();
 const route = useRoute();
 const user: string = "default_user";
-const { data: boards, isPending } = useLocalConvexQuery(api.functions.boards.getBoards, { user });
+const { data: boards, isPending } = useConvexQuery(api.functions.boards.getBoards, { user });
 const boardsCount = computed(() => (boards.value ? boards.value.length : 0));
 const currentBoardId = computed(() => route.params.boardId as string);
 const isInitialLoad = ref(true);

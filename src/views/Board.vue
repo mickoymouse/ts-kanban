@@ -7,11 +7,11 @@ import { useBoardStore } from "@/stores/Board";
 import type { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
 import TaskColumn from "@/components/TaskColumn.vue";
-import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 import TaskModal from "@/components/TaskModal.vue";
 import DeleteTaskModal from "@/components/DeleteTaskModal.vue";
 import { useTaskModalStore } from "@/stores/Task";
 import NumberFlow from "@/components/ui/NumberFlow.vue";
+import { useConvexQuery } from "convex-vue";
 
 const boardStore = useBoardStore();
 const { setColumns } = boardStore;
@@ -21,7 +21,7 @@ const { show, showDelete } = storeToRefs(taskModalStore);
 const route = useRoute();
 const boardId = computed(() => route.params.boardId as Id<"boards">);
 
-const { data: columns, isPending } = useLocalConvexQuery(api.functions.columns.getColumns, () => ({
+const { data: columns, isPending } = useConvexQuery(api.functions.columns.getColumns, () => ({
   boardId: boardId.value,
 }));
 

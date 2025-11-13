@@ -11,9 +11,11 @@ import { useLocalConvexQuery } from "@/composables/convex/useConvexQuery";
 import TaskModal from "@/components/TaskModal.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import { useTaskModalStore } from "@/stores/Task";
+import Boardmodal from "@/components/Boardmodal.vue";
 
 const boardStore = useBoardStore();
 const { setColumns } = boardStore;
+const { showModal } = storeToRefs(boardStore);
 
 const taskModalStore = useTaskModalStore();
 const { show, showDelete } = storeToRefs(taskModalStore);
@@ -78,4 +80,5 @@ watch(
   </div>
   <TaskModal v-if="show" />
   <DeleteModal v-else-if="showDelete" />
+  <Boardmodal v-else-if="showModal" />
 </template>

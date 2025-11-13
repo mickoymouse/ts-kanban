@@ -26,3 +26,30 @@ export const getBoards = query({
     }));
   },
 });
+
+export const createBoard = mutation({
+  args: {
+    board: v.object({
+      name: v.string(),
+      user: v.string(),
+      columns: v.array(v.object({ name: v.string() })),
+    }),
+  },
+  handler: async (ctx, { board }) => {
+    const boardId = await ctx.db.insert("boards", {
+      name: board.name,
+      user: board.user,
+    });
+
+    const columnInserts = [];
+    for (const column of board.columns) {
+      columnInserts.push(
+        ctx.db.insert("columns", {
+          name: column.name,
+          boardId: boardId,
+        }),
+      );
+    }
+    await Promise.all(columnInserts);
+  },
+});

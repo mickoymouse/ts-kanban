@@ -15,6 +15,7 @@ import { useTheme } from "@/composables/Theme.js";
 import Switch from "@/components/ui/Switch.vue";
 
 const boardStore = useBoardStore();
+const { openBoardModal } = boardStore;
 const { isDarkMode, toggleTheme } = useTheme();
 const router = useRouter();
 const route = useRoute();
@@ -106,7 +107,10 @@ watch(
             <span>{{ board.name }}</span>
           </RouterLink>
         </ul>
-        <p class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer">
+        <p
+          class="flex items-center gap-2 px-6 text-(--cst-primary) cursor-pointer"
+          @click="openBoardModal('create')"
+        >
           <ListIcon />
           <span>+ Create New Board</span>
         </p>

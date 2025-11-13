@@ -12,7 +12,7 @@ export interface BoardForm {
 
 export interface Columns {
   id: string;
-  title: string;
+  name: string;
 }
 
 const props = defineProps<{
@@ -45,7 +45,7 @@ const handleSubmit = () => {
 const columnsRef: (HTMLInputElement | null)[] = [];
 
 const addColumn = async () => {
-  props.boardForm.columns.push({ id: "new", title: "" });
+  props.boardForm.columns.push({ id: "new", name: "" });
   await nextTick();
   const lastIndex = props.boardForm.columns.length - 1;
   columnsRef[lastIndex]?.focus();
@@ -83,8 +83,8 @@ const removeColumn = (index: number) => {
         <input
           class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary) focus:invalid:outline-(--cst-destructive)"
           type="text"
-          placeholder="e.g. Make coffee"
-          v-model="boardForm.columns[index]!.title"
+          placeholder="e.g. Todo"
+          v-model="boardForm.columns[index]!.name"
           :ref="(el) => (columnsRef[index] = el as HTMLInputElement | null)"
           required
         />

@@ -1,5 +1,6 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from "convex/server";
 import type { Ref } from "vue";
+import { nextTick } from "vue";
 import type { OptionalRestArgsAndOptions } from "../optional.types.ts";
 import type { UseConvexQueryOptions, UseConvexQueryReturn } from "../queryReturn.types.ts";
 import { getFunctionName } from "convex/server";
@@ -59,7 +60,9 @@ export function useLocalConvexQuery<Query extends FunctionReference<"query">>(
     error.value = err;
   };
 
-  const handleResult = (result: FunctionReturnType<Query>) => {
+  const handleResult = async (result: FunctionReturnType<Query>) => {
+    data.value = null;
+    await nextTick();
     data.value = result;
     error.value = null;
   };

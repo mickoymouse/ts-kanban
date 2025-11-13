@@ -4,9 +4,25 @@ import { v } from "convex/values";
 export const getBoards = query({
   args: { user: v.string() },
   handler: async (ctx, { user }) => {
-    return await ctx.db
+    const boards = await ctx.db
       .query("boards")
       .withIndex("by_user", (q) => q.eq("user", user))
       .collect();
+
+    const columnsFetcher = [];
+    for (const board of boards) {
+      columnsFetcher.push(
+        ctx.db
+          .query("columns")
+          .withIndex("by_board", (q) => q.eq("boardId", board._id))
+          .collect(),
+      );
+    }
+
+    const columns = await Promise.all(columnsFetcher);
+    return boards.map((board, index) => ({
+      ...board,
+      columns: columns[index],
+    }));
   },
 });

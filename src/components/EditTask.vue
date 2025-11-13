@@ -12,14 +12,14 @@ import TaskForm from "@/components/TaskForm.vue";
 
 const toast = useToast();
 const boardStore = useBoardStore();
-const { board, columns } = storeToRefs(boardStore);
+const { board } = storeToRefs(boardStore);
 const taskModalStore = useTaskModalStore();
 const { closeTaskModal } = taskModalStore;
 
-const columnNames = computed(() => columns.value.map((column) => column.name));
+const columnNames = computed(() => board.value?.columns?.map((column) => column.name) || []);
 const columnNameToIdMap = computed(() => {
   const map: Record<string, Id<"columns">> = {};
-  columns.value.forEach((column) => {
+  board.value?.columns?.forEach((column) => {
     map[column.name] = column._id as Id<"columns">;
   });
   return map;
@@ -56,7 +56,7 @@ const updateTaskHandler = async () => {
       task: {
         title: taskForm.title,
         description: taskForm.description,
-        boardId: board.value?.id as Id<"boards">,
+        boardId: board.value?._id as Id<"boards">,
         columnId: columnNameToIdMap.value[taskForm.status as string] as Id<"columns">,
         subtasks: taskForm.subtasks.map((subtask) => ({
           _id: subtask.id,

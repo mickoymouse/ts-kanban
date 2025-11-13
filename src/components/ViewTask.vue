@@ -23,12 +23,12 @@ const totalTasks = computed(() => props.task.subtasks.length ?? 0);
 const boardStore = useBoardStore();
 const taskModalStore = useTaskModalStore();
 const { closeTaskModal, setTaskToDelete, showDeleteModal, setTaskAction } = taskModalStore;
-const { columns } = storeToRefs(boardStore);
+const { board } = storeToRefs(boardStore);
 
-const columnNames = computed(() => columns.value.map((column) => column.name));
+const columnNames = computed(() => board.value?.columns?.map((column) => column.name) || []);
 const columnNameToIdMap = computed(() => {
   const map: Record<string, Id<"columns">> = {};
-  columns.value.forEach((column) => {
+  board.value?.columns?.forEach((column) => {
     map[column.name] = column._id as Id<"columns">;
   });
   return map;

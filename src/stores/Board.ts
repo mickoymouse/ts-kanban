@@ -1,19 +1,24 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 
-export const useBoardStore = defineStore("board", () => {
-  const board = reactive<{ id: string | null; name: string | null }>({ id: null, name: null });
-  const isLoading = ref(false);
-  const columns = ref<
-    Array<{
-      _id: string;
-      name: string;
-    }>
-  >([]);
+export type BoardAction = "create" | "edit";
+export type Board = {
+  _id: string;
+  name: string;
+  columns:
+    | Array<{
+        _id: string;
+        name: string;
+      }>
+    | undefined;
+};
 
-  const setBoard = (id: string, name: string) => {
-    board.id = id;
-    board.name = name;
+export const useBoardStore = defineStore("board", () => {
+  const board = ref<Board | null>(null);
+  const isLoading = ref(false);
+
+  const setBoard = (boardData: Board | null) => {
+    board.value = boardData;
   };
 
   const setLoading = (loading: boolean) => {
@@ -21,8 +26,8 @@ export const useBoardStore = defineStore("board", () => {
   };
 
   const setColumns = (newColumns: Array<{ _id: string; name: string }>) => {
-    columns.value = newColumns;
+    if (board.value) board.value.columns = newColumns;
   };
 
-  return { board, setBoard, isLoading, setLoading, columns, setColumns };
+  return { board, setBoard, isLoading, setLoading, setColumns };
 });

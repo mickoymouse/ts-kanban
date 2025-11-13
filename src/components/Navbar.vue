@@ -19,7 +19,7 @@ const { showTaskModal } = taskModalStore;
     <div>
       <!-- skeleton for board name -->
       <div v-if="isLoading" class="h-8 bg-gray-300 rounded animate-pulse w-48"></div>
-      <h1 v-else class="text-[24px] font-bold">{{ board.name }}</h1>
+      <h1 v-else class="text-[24px] font-bold">{{ board?.name }}</h1>
     </div>
     <div class="flex items-center gap-4">
       <button

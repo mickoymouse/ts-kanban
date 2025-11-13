@@ -19,6 +19,7 @@ const closeBoardOptions = () => {
   showBoardOptions.value = false;
 };
 const openBoardOptions = () => {
+  if (isLoading.value || board.value == null) return;
   showBoardOptions.value = true;
 };
 
@@ -73,9 +74,14 @@ onUnmounted(() => {
       >
         + Add New Task
       </button>
-      <OptionsButton class="cursor-pointer" @click="openBoardOptions" />
+      <OptionsButton
+        :class="[
+          { 'opacity-30 cursor-not-allowed': isLoading || board == null },
+          { 'cursor-pointer hover:opacity-80': !isLoading && board != null },
+        ]"
+        @click="openBoardOptions"
+      />
       <div
-        :disabled="isLoading || board == null"
         v-show="showBoardOptions"
         ref="boardOptionsRef"
         class="bg-(--cst-bg2) flex flex-col gap-2 absolute right-0 top-full font-medium text-[13px] rounded-md shadow-md overflow-hidden"

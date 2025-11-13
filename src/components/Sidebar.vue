@@ -33,7 +33,6 @@ const currentBoardId = computed(() => route.params.boardId as string);
 watch(
   isPending,
   (pending) => {
-    console.log("Boards loading:", pending);
     setLoading(pending);
     if (!pending) {
       if (!boards.value || boards.value.length === 0) {

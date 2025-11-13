@@ -2,6 +2,7 @@
 import { ref, reactive } from "vue";
 import { useConvexMutation } from "convex-vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 import BoardForm from "@/components/BoardForm.vue";
 import { api } from "../../convex/_generated/api";
@@ -22,12 +23,13 @@ const boardStore = useBoardStore();
 const { closeBoardModal } = boardStore;
 
 const toast = useToast();
+const router = useRouter();
 
 const createBoardMutation = useConvexMutation(api.functions.boards.createBoard);
 const createBoard = async () => {
   isCreatingBoard.value = true;
   try {
-    await createBoardMutation.mutate({
+    const boardId = await createBoardMutation.mutate({
       board: {
         name: boardForm.name,
         columns: boardForm.columns.map((col) => ({ name: col.name })),
@@ -36,6 +38,7 @@ const createBoard = async () => {
     });
     closeBoardModal();
     toast.success("Board created successfully!");
+    router.push({ name: "board", params: { boardId } });
   } catch (error) {
     console.error("Error creating board:", error);
     toast.error("Failed to create board. Please try again.");

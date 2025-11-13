@@ -52,6 +52,8 @@ export const createBoard = mutation({
       );
     }
     await Promise.all(columnInserts);
+
+    return boardId;
   },
 });
 

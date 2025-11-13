@@ -46,7 +46,9 @@ watch(
 </script>
 
 <template>
-  <div class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6 overflow-auto scrollbar-hide">
+  <div
+    class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6 overflow-auto scrollbar-hide relative"
+  >
     <!-- Skeleton loading state -->
     <div v-if="isPending && isInitialLoad" class="space-y-4">
       <div v-for="n in 3" :key="n" class="bg-gray-200 rounded-lg p-4 animate-pulse">
@@ -55,6 +57,29 @@ watch(
         <div class="h-3 bg-gray-300 rounded w-1/2"></div>
       </div>
     </div>
-    <TaskCard v-else v-for="task in tasks" :key="task._id" :task="task" />
+    <TransitionGroup v-else tag="div" name="task-card-list" class="flex flex-col gap-4" appear>
+      <TaskCard v-for="task in tasks" :key="task._id" :task="task" />
+    </TransitionGroup>
   </div>
 </template>
+
+<style scoped>
+.task-card-move,
+.task-card-list-enter-active,
+.task-card-list-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.task-card-list-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.task-card-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.task-card-list-leave-active {
+  position: absolute;
+}
+</style>

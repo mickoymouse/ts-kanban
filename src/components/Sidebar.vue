@@ -32,11 +32,9 @@ const isInitialLoad = ref(true);
 
 const boardRoutingHandler = () => {
   if (!boards.value || boards.value.length === 0) {
-    console.log("No boards available, redirecting to kanban overview.");
     router.replace({ name: "kanban" });
     setBoard(null);
   } else if (!currentBoard.value) {
-    console.log("No current board selected, redirecting to the first board.");
     const firstBoard = boards.value[0];
     if (firstBoard) {
       setBoard(firstBoard);

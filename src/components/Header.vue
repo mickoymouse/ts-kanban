@@ -68,7 +68,7 @@ onUnmounted(() => {
     </div>
     <div v-else class="flex items-center gap-4 relative">
       <button
-        class="bg-(--cst-primary) h-10 w-[164px] rounded-full disabled:opacity-30 text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
+        class="bg-(--cst-primary) h-10 w-[164px] rounded-full disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
         :disabled="isLoading || board == null || board.columns.length === 0"
         @click="showTaskModal('create')"
       >

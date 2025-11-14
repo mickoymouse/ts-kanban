@@ -61,7 +61,7 @@ const updateTaskHandler = async () => {
         subtasks: taskForm.subtasks.map((subtask) => ({
           _id: subtask.id,
           title: subtask.title,
-          isCompleted: false,
+          isCompleted: subtask.isCompleted,
         })),
       },
     });

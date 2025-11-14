@@ -33,7 +33,7 @@ const taskFormSchema = z.object({
     .string()
     .min(3, "Title must be at least 3 characters long.")
     .max(75, "Title must be at most 75 characters long."),
-  description: z.string().max(500, "Description must be at most 500 characters long.").optional(),
+  description: z.string().max(150, "Description must be at most 150 characters long.").optional(),
   subtasks: z.array(
     z.object({
       id: z.string(),
@@ -63,6 +63,12 @@ const validateTaskForm = () => {
 
 const getFieldErrors = (fieldName: string) => {
   const errs = taskFormErrors.value?.properties?.[fieldName]?.errors ?? [];
+  return errs.join(" ");
+};
+
+const getSubtaskError = (index: number, field: string) => {
+  const errs =
+    taskFormErrors.value?.properties?.subtasks?.items?.[index]?.properties?.[field]?.errors ?? [];
   return errs.join(" ");
 };
 
@@ -116,54 +122,68 @@ const removeSubtask = (index: number) => {
   >
     <h2 class="text-[18px]">{{ taskTitle }}</h2>
     <label class="text-[12px] text-(--cst-foreground)" for="title">Title</label>
-    <input
-      class="font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
-      id="title"
-      type="text"
-      placeholder="e.g. Take coffee break"
-      v-model="taskForm.title"
-      :disabled="isExecuting"
-    />
-    <p
-      v-if="getFieldErrors('title').length != 0"
-      class="text-[12px] font-medium text-(--cst-destructive)"
-    >
-      {{ getFieldErrors("title") }}
-    </p>
+    <div class="w-full flex flex-col gap-2">
+      <input
+        class="w-full font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+        id="title"
+        type="text"
+        placeholder="e.g. Take coffee break"
+        v-model="taskForm.title"
+        :disabled="isExecuting"
+      />
+      <p
+        v-if="getFieldErrors('title').length != 0"
+        class="text-[12px] font-medium text-(--cst-destructive)"
+      >
+        {{ getFieldErrors("title") }}
+      </p>
+    </div>
     <label class="text-[12px] text-(--cst-foreground)" for="description">Description</label>
-    <textarea
-      class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
-      id="description"
-      rows="4"
-      cols="50"
-      placeholder="e.g. It's always good to take a break. This 15 minute break will 
-recharge the batteries a little."
-      v-model="taskForm.description"
-      :disabled="isExecuting"
-    ></textarea>
+    <div class="w-full flex flex-col gap-2">
+      <textarea
+        class="font-medium resize-none border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+        id="description"
+        rows="4"
+        cols="50"
+        placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
+        v-model="taskForm.description"
+        :disabled="isExecuting"
+      ></textarea>
+      <p
+        v-if="getFieldErrors('description').length != 0"
+        class="text-[12px] font-medium text-(--cst-destructive)"
+      >
+        {{ getFieldErrors("description") }}
+      </p>
+    </div>
     <fieldset class="flex flex-col gap-2" :disabled="isExecuting">
       <legend class="text-[12px] text-(--cst-foreground) pb-4">Subtasks</legend>
-      <div
-        class="flex items-center gap-4 w-full"
-        v-for="(_, index) in taskForm.subtasks"
-        :key="index"
-      >
-        <input
-          class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
-          type="text"
-          placeholder="e.g. Make coffee"
-          v-model="taskForm.subtasks[index]!.title"
-          :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
-        />
-        <CrossIcon
-          :class="[
-            'shrink-0',
-            isExecuting
-              ? 'cursor-not-allowed opacity-50 text-(--cst-foreground)/50'
-              : 'cursor-pointer text-(--cst-foreground) hover:text-(--cst-destructive)',
-          ]"
-          @click="!isExecuting && removeSubtask(index)"
-        />
+      <div class="flex flex-col gap-2" v-for="(_, index) in taskForm.subtasks" :key="index">
+        <div class="flex items-center gap-4 w-full">
+          <input
+            class="flex-1 font-medium border border-(--cst-foreground)/25 p-2 rounded-md focus:outline-(--cst-primary)"
+            type="text"
+            placeholder="e.g. Make coffee"
+            v-model="taskForm.subtasks[index]!.title"
+            :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
+          />
+
+          <CrossIcon
+            :class="[
+              'shrink-0',
+              isExecuting
+                ? 'cursor-not-allowed opacity-50 text-(--cst-foreground)/50'
+                : 'cursor-pointer text-(--cst-foreground) hover:text-(--cst-destructive)',
+            ]"
+            @click="!isExecuting && removeSubtask(index)"
+          />
+        </div>
+        <p
+          v-if="getSubtaskError(index, 'title').length != 0"
+          class="text-[12px] font-medium text-(--cst-destructive)"
+        >
+          {{ getSubtaskError(index, "title") }}
+        </p>
       </div>
     </fieldset>
     <button

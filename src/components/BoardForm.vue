@@ -40,6 +40,7 @@ const boardFormSchema = z.object({
   ),
 });
 
+const boardFormFirstSubmit = ref(false);
 const boardFormErrors = ref<any>(null);
 
 const boardButtonLabel = computed(() => {
@@ -61,11 +62,18 @@ const emit = defineEmits<{
 }>();
 
 const handleSubmit = () => {
+  boardFormFirstSubmit.value = true;
   if (!validateForm(boardFormSchema, boardFormErrors, toRef(props.boardForm))) return;
   if (props.boardAction == "create") {
     emit("createBoard", props.boardForm);
   } else if (props.boardAction == "edit") {
     emit("updateBoard", props.boardForm);
+  }
+};
+
+const onFormBlur = () => {
+  if (boardFormFirstSubmit.value) {
+    validateForm(boardFormSchema, boardFormErrors, toRef(props.boardForm));
   }
 };
 
@@ -110,6 +118,7 @@ const removeColumn = (index: number) => {
         placeholder="e.g. Web Design"
         v-model="boardForm.name"
         :disabled="isExecuting"
+        @blur="onFormBlur"
       />
       <p
         v-if="getFieldErrors('name').length != 0"
@@ -128,6 +137,7 @@ const removeColumn = (index: number) => {
             placeholder="e.g. Todo"
             v-model="boardForm.columns[index]!.name"
             :ref="(el) => (columnsRef[index] = el as HTMLInputElement | null)"
+            @blur="onFormBlur"
           />
           <CrossIcon
             :class="[

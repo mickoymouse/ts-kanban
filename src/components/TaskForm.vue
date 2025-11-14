@@ -48,7 +48,14 @@ const taskFormSchema = z.object({
   ),
 });
 
+const taskFormFirstSubmit = ref(false);
 const taskFormErrors = ref<any>(null);
+
+const onFormBlur = () => {
+  if (taskFormFirstSubmit.value) {
+    validateForm(taskFormSchema, taskFormErrors, toRef(props.taskForm));
+  }
+};
 
 const getFieldErrors = (fieldName: string) => {
   const errs = taskFormErrors.value?.properties?.[fieldName]?.errors ?? [];
@@ -81,6 +88,7 @@ const emit = defineEmits<{
 }>();
 
 const handleSubmit = () => {
+  taskFormFirstSubmit.value = true;
   if (!validateForm(taskFormSchema, taskFormErrors, toRef(props.taskForm))) return;
   if (props.taskAction == "create") {
     emit("createTask", props.taskForm);
@@ -119,6 +127,7 @@ const removeSubtask = (index: number) => {
         placeholder="e.g. Take coffee break"
         v-model="taskForm.title"
         :disabled="isExecuting"
+        @blur="onFormBlur"
       />
       <p
         v-if="getFieldErrors('title').length != 0"
@@ -137,6 +146,7 @@ const removeSubtask = (index: number) => {
         placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
         v-model="taskForm.description"
         :disabled="isExecuting"
+        @blur="onFormBlur"
       ></textarea>
       <p
         v-if="getFieldErrors('description').length != 0"
@@ -155,6 +165,7 @@ const removeSubtask = (index: number) => {
             placeholder="e.g. Make coffee"
             v-model="taskForm.subtasks[index]!.title"
             :ref="(el) => (subtaskRefs[index] = el as HTMLInputElement | null)"
+            @blur="onFormBlur"
           />
 
           <CrossIcon

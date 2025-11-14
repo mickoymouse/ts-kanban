@@ -8,6 +8,7 @@ export const validateForm = <T>(schema: z.ZodSchema<T>, formErrors: Ref<any>, fo
       formErrors.value = z.treeifyError(result.error);
       throw formErrors.value;
     }
+    formErrors.value = null;
     return true;
   } catch (error) {
     return false;

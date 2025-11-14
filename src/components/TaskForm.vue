@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { LoaderCircle } from "lucide-vue-next";
 import * as z from "zod";
-import { ref } from "vue";
+import { ref, computed, nextTick, toRef } from "vue";
 
 import Dropdown from "@/components/ui/Dropdown.vue";
 import CrossIcon from "@/icons/icon-cross.svg";
 import type { TaskAction } from "@/stores/Task";
-import { computed, nextTick } from "vue";
+import { validateForm } from "@/lib/zod";
 
 export interface TaskForm {
   title: string;
@@ -31,9 +31,12 @@ const props = defineProps<{
 const taskFormSchema = z.object({
   title: z
     .string()
-    .min(3, "Title must be at least 3 characters long.")
-    .max(75, "Title must be at most 75 characters long."),
-  description: z.string().max(150, "Description must be at most 150 characters long.").optional(),
+    .min(3, "Task title must be at least 3 characters long.")
+    .max(75, "Task title must be at most 75 characters long."),
+  description: z
+    .string()
+    .max(150, "Task description must be at most 150 characters long.")
+    .optional(),
   subtasks: z.array(
     z.object({
       id: z.string(),
@@ -46,20 +49,6 @@ const taskFormSchema = z.object({
 });
 
 const taskFormErrors = ref<any>(null);
-
-const validateTaskForm = () => {
-  try {
-    const result = taskFormSchema.safeParse(props.taskForm);
-    if (!result.success) {
-      taskFormErrors.value = z.treeifyError(result.error);
-      throw taskFormErrors.value;
-    }
-    return true;
-  } catch (error) {
-    console.log("Validation error:", error);
-    return false;
-  }
-};
 
 const getFieldErrors = (fieldName: string) => {
   const errs = taskFormErrors.value?.properties?.[fieldName]?.errors ?? [];
@@ -92,7 +81,7 @@ const emit = defineEmits<{
 }>();
 
 const handleSubmit = () => {
-  if (!validateTaskForm()) return;
+  if (!validateForm(taskFormSchema, taskFormErrors, toRef(props.taskForm))) return;
   if (props.taskAction == "create") {
     emit("createTask", props.taskForm);
   } else if (props.taskAction == "edit") {

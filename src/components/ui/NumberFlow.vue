@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, defineProps } from "vue";
+import { ref, watch } from "vue";
 const props = defineProps<{
   number: number; // Number to display
   class?: string; // Optional classes from parent

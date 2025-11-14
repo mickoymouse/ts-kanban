@@ -8,7 +8,6 @@ import BoardForm from "@/components/BoardForm.vue";
 import { api } from "../../convex/_generated/api";
 import { useBoardStore } from "@/stores/Board";
 import type { Columns } from "@/components/BoardForm.vue";
-import { set } from "zod";
 
 const isCreatingBoard = ref(false);
 const boardForm = reactive({

@@ -14,7 +14,7 @@ import NumberFlow from "@/components/ui/NumberFlow.vue";
 import { useConvexQuery } from "convex-vue";
 
 const boardStore = useBoardStore();
-const { setColumns } = boardStore;
+const { setColumns, openBoardModal } = boardStore;
 
 const taskModalStore = useTaskModalStore();
 const { show, showDelete } = storeToRefs(taskModalStore);
@@ -30,6 +30,10 @@ const isInitialLoad = ref(true);
 const taskCounts = ref<Record<string, number>>({});
 const updateTaskCount = (columnId: string, count: number) => {
   taskCounts.value[columnId] = count;
+};
+
+const editBoard = () => {
+  openBoardModal("edit");
 };
 
 watch(
@@ -86,6 +90,7 @@ watch(
       </p>
       <button
         class="text-[15px] bg-(--cst-primary) px-4 py-2 rounded-full text-white cursor-pointer"
+        @click="editBoard"
       >
         + Add New Column
       </button>

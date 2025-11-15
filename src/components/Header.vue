@@ -103,13 +103,13 @@ onUnmounted(() => {
     <div class="h-24 w-full items-center flex justify-between px-8 border border-(--cst-lines)">
       <div>
         <!-- skeleton for board name -->
-        <div v-if="isLoading" class="h-8 bg-gray-300 rounded animate-pulse w-48"></div>
+        <div v-if="isLoading" class="h-8 bg-(--cst-lines) rounded animate-pulse w-48"></div>
         <h1 v-else class="text-[24px] font-bold">{{ board?.name }}</h1>
       </div>
       <!-- skeleton for add task button and option -->
       <div v-if="isLoading" class="flex items-center gap-4">
-        <div class="h-10 bg-gray-300 rounded-full animate-pulse w-[164px]"></div>
-        <div class="w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+        <div class="h-10 bg-(--cst-lines) rounded-full animate-pulse w-[164px]"></div>
+        <div class="w-6 h-6 bg-(--cst-lines) rounded-full animate-pulse"></div>
       </div>
       <div v-else class="flex items-center gap-4 relative">
         <button

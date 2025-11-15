@@ -66,16 +66,16 @@ watch(
     >
       <div v-for="i in 3" :key="i" class="flex flex-col gap-4">
         <!-- Column header skeleton -->
-        <div class="h-4 bg-gray-300 rounded animate-pulse w-32"></div>
+        <div class="h-4 bg-(--cst-bg2) rounded animate-pulse w-32"></div>
         <!-- Column content skeleton -->
         <div
           class="h-full min-w-[280px] max-w-[280px] flex flex-col gap-6 overflow-auto scrollbar-hide"
         >
           <div class="space-y-4">
-            <div v-for="n in 3" :key="n" class="bg-gray-200 rounded-lg p-4 animate-pulse">
-              <div class="h-4 bg-gray-300 rounded mb-2"></div>
-              <div class="h-3 bg-gray-300 rounded w-3/4 mb-2"></div>
-              <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+            <div v-for="n in 3" :key="n" class="bg-(--cst-bg2) rounded-lg p-4 animate-pulse">
+              <div class="h-4 bg-(--cst-lines) rounded mb-2"></div>
+              <div class="h-3 bg-(--cst-lines) rounded w-3/4 mb-2"></div>
+              <div class="h-3 bg-(--cst-lines) rounded w-1/2"></div>
             </div>
           </div>
         </div>

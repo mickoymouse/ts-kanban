@@ -51,10 +51,10 @@ watch(
   >
     <!-- Skeleton loading state -->
     <div v-if="isPending && isInitialLoad" class="space-y-4">
-      <div v-for="n in 3" :key="n" class="bg-gray-200 rounded-lg p-4 animate-pulse">
-        <div class="h-4 bg-gray-300 rounded mb-2"></div>
-        <div class="h-3 bg-gray-300 rounded w-3/4 mb-2"></div>
-        <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+      <div v-for="n in 3" :key="n" class="bg-(--cst-bg2) rounded-lg p-4 animate-pulse">
+        <div class="h-4 bg-(--cst-lines) rounded mb-2"></div>
+        <div class="h-3 bg-(--cst-lines) rounded w-3/4 mb-2"></div>
+        <div class="h-3 bg-(--cst-lines) rounded w-1/2"></div>
       </div>
     </div>
     <TransitionGroup v-else tag="div" name="task-card-list" class="flex flex-col gap-4" appear>

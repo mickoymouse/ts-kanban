@@ -70,7 +70,7 @@ onUnmounted(() => {
     </button>
     <div
       v-show="open"
-      class="absolute z-10 bg-(--cst-bg2) rounded-b-md transition-all duration-150 ease-in-out"
+      class="absolute z-10 bg-(--cst-bg2) rounded-b-md"
       :style="{ width: buttonWidth }"
     >
       <ul>

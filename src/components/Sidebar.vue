@@ -68,12 +68,11 @@ watch(refreshBoard, boardRoutingHandler);
 
 <template>
   <aside
-    class="bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-[width, opacity] duration-500 ease-in-out"
-    :class="
-      !showSidebar
-        ? 'w-0 min-w-0 max-w-0 overflow-hidden opacity-0'
-        : 'min-w-[300px] max-w-[300px] opacity-100'
-    "
+    class="bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-[width] duration-500 ease-in-out"
+    :class="{
+      'w-0': !showSidebar,
+      'w-[300px]': showSidebar,
+    }"
   >
     <div
       class="transition-opacity duration-200 ease-out"
@@ -99,13 +98,6 @@ watch(refreshBoard, boardRoutingHandler);
             >
               <div class="w-4 h-4 bg-(--cst-lines) rounded"></div>
               <div class="h-3 bg-(--cst-lines) rounded flex-1"></div>
-            </div>
-          </div>
-          <!-- Skeleton for "Create New Board" -->
-          <div class="px-6">
-            <div class="h-10 bg-(--cst-lines) animate-pulse rounded flex items-center gap-2 px-2">
-              <div class="w-4 h-4 bg-(--cst-bg) rounded"></div>
-              <div class="h-3 bg-(--cst-bg) rounded w-32"></div>
             </div>
           </div>
         </div>

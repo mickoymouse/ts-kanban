@@ -76,7 +76,7 @@ watch(refreshBoard, boardRoutingHandler);
   >
     <div
       class="transition-opacity duration-200 ease-out"
-      :class="!showSidebar ? 'opacity-0' : 'opacity-100 delay-234'"
+      :class="!showSidebar ? 'opacity-0' : 'opacity-100 delay-255'"
     >
       <div class="h-24 flex items-center px-6">
         <LogoDark class="w-[152px]" v-if="!isDarkMode" />
@@ -134,7 +134,7 @@ watch(refreshBoard, boardRoutingHandler);
                 @click="boardStore.setBoard(board)"
               >
                 <ListIcon />
-                <span>{{ board.name }}</span>
+                <p class="truncate">{{ board.name }}</p>
               </RouterLink>
             </ul>
           </nav>

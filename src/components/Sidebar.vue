@@ -68,7 +68,7 @@ watch(refreshBoard, boardRoutingHandler);
 
 <template>
   <aside
-    class="bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-[width] duration-500 ease-in-out"
+    class="hidden md:block bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-[width] duration-500 ease-in-out"
     :class="{
       'w-0': !showSidebar,
       'w-[300px]': showSidebar,
@@ -159,7 +159,7 @@ watch(refreshBoard, boardRoutingHandler);
       </div>
     </div>
   </aside>
-  <div v-show="!showSidebar" class="absolute bottom-8 left-0 z-999">
+  <div v-show="!showSidebar" class="hidden md:block absolute bottom-8 left-0 z-999">
     <div class="w-14 h-12 bg-(--cst-primary) rounded-r-full">
       <button
         class="w-full h-full flex items-center justify-center cursor-pointer"

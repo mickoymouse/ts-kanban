@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { computed, watch, ref } from "vue";
+import { computed, watch, ref, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useBoardStore } from "@/stores/Board";
@@ -14,7 +14,7 @@ import NumberFlow from "@/components/ui/NumberFlow.vue";
 import { useConvexQuery } from "convex-vue";
 
 const boardStore = useBoardStore();
-const { setColumns, openBoardModal } = boardStore;
+const { setColumns, openBoardModal, setBoardComponentMounted } = boardStore;
 
 const taskModalStore = useTaskModalStore();
 const { show, showDelete } = storeToRefs(taskModalStore);
@@ -57,9 +57,14 @@ watch(
   },
   { immediate: true },
 );
+
+onMounted(async () => {
+  await nextTick();
+  setBoardComponentMounted(true);
+});
 </script>
 <template>
-  <div class="flex flex-col h-full w-full select-none">
+  <div id="board" class="flex flex-col h-full w-full select-none relative">
     <div
       v-if="isPending && isInitialLoad"
       class="w-full flex-1 flex gap-4 pl-4 pt-4 overflow-auto scrollbar-hide"
@@ -83,7 +88,7 @@ watch(
     </div>
     <div
       v-else-if="!columns || columns.length == 0"
-      class="flex-1 flex flex-col items-center justify-center gap-4 font-bold"
+      class="flex-1 flex flex-col items-center justify-center gap-4 font-bold text-center mx-8"
     >
       <p class="text-[18px] text-(--cst-foreground)">
         This board is empty. Create a new column to get started.

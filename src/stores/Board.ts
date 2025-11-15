@@ -13,6 +13,7 @@ export type Board = {
 };
 
 export const useBoardStore = defineStore("board", () => {
+  const boardComponentMounted = ref(false);
   const board = ref<Board | null>(null);
   const boardAction = ref<BoardAction | null>(null);
   const isLoading = ref(false);
@@ -20,6 +21,10 @@ export const useBoardStore = defineStore("board", () => {
   const showDeleteModal = ref(false);
   const currentBoard = ref<Board | null>(null);
   const refreshBoard = ref(0);
+
+  const setBoardComponentMounted = (mounted: boolean) => {
+    boardComponentMounted.value = mounted;
+  };
 
   const setBoard = (boardData: Board | null) => {
     board.value = boardData;
@@ -81,5 +86,7 @@ export const useBoardStore = defineStore("board", () => {
     setCurrentBoard,
     refreshBoard,
     refreshBoardHandler,
+    boardComponentMounted,
+    setBoardComponentMounted,
   };
 });

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Teleport } from "vue";
 
 const props = defineProps({
@@ -6,18 +6,25 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  class: {
+    type: String,
+    required: false,
+    default: "items-center justify-center",
+  },
+  teleportPlace: {
+    type: String,
+    required: false,
+    default: "body",
+  },
 });
 
 const emit = defineEmits(["closeModal"]);
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="props.show" class="w-full h-full fixed z-999 bg-black/50 inset-0">
-      <div
-        class="flex items-center justify-center w-full h-full"
-        @mousedown.self="emit('closeModal')"
-      >
+  <Teleport :to="props.teleportPlace">
+    <div v-if="props.show" class="w-full h-full absolute z-999 bg-black/50 inset-0">
+      <div :class="`flex w-full h-full ${props.class}`" @mousedown.self="emit('closeModal')">
         <slot></slot>
       </div>
     </div>

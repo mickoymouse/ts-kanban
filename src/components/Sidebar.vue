@@ -82,6 +82,7 @@ watch(refreshBoard, boardRoutingHandler);
         <LogoDark class="w-[152px]" v-if="!isDarkMode" />
         <LogoLight class="w-[152px]" v-else />
       </div>
+      <!-- skeletons here -->
       <div
         v-if="isPending && isInitialLoad"
         class="h-[calc(100vh-96px)] flex flex-col justify-between"
@@ -102,7 +103,7 @@ watch(refreshBoard, boardRoutingHandler);
           </div>
         </div>
         <!-- Skeleton for bottom section -->
-        <div class="pb-12 px-6 flex flex-col gap-4">
+        <div class="pb-6 px-6 flex flex-col gap-4">
           <!-- Skeleton for theme toggle -->
           <div class="flex gap-4 w-full items-center justify-center bg-(--cst-bg) py-4 rounded-md">
             <div class="w-4 h-4 bg-(--cst-lines) animate-pulse rounded"></div>
@@ -116,10 +117,13 @@ watch(refreshBoard, boardRoutingHandler);
           </div>
         </div>
       </div>
-      <div v-else class="h-[calc(100vh-96px)] flex flex-col justify-between">
-        <div class="flex flex-col pr-6 gap-4">
-          <p class="px-6 text-[12px]">All Boards ( {{ boardsCount }} )</p>
-          <nav aria-label="Navigation main sidebar">
+      <div v-else class="h-[calc(100vh-96px)] flex flex-col justify-between gap-4">
+        <div class="flex-1 flex flex-col pr-6 gap-4 min-h-0">
+          <p class="shrink-0 px-6 text-[12px] tracking-[2.4px]">ALL BOARDS ({{ boardsCount }})</p>
+          <nav
+            class="flex-1 min-h-1 overflow-auto scrollbar-hide"
+            aria-label="Navigation main sidebar"
+          >
             <ul class="flex flex-col gap-4">
               <RouterLink
                 v-for="board in boards"
@@ -146,7 +150,7 @@ watch(refreshBoard, boardRoutingHandler);
             <span>+ Create New Board</span>
           </p>
         </div>
-        <div class="pb-12 px-6 flex flex-col gap-4">
+        <div class="shrink-0 pb-6 px-6 flex flex-col gap-4">
           <div class="flex gap-4 w-full items-center justify-center bg-(--cst-bg) py-4 rounded-md">
             <LightIcon />
             <Switch :state="isDarkMode" @update:state="toggleTheme" />

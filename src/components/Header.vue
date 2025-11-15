@@ -109,7 +109,35 @@ onUnmounted(() => {
 }
 
 .fade-enter-active {
-  transition: opacity 0.3s ease-in;
+  transition: opacity 0.3s ease-in-out;
+}
+
+:global(.modal-fade-enter-from) {
+  transform: translateY(100px);
+  opacity: 0;
+}
+:global(.modal-fade-enter-to) {
+  transform: translateY(0);
+  opacity: 1;
+}
+:global(.modal-fade-enter-active) {
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+:global(.modal-fade-leave-from) {
+  transform: translateY(0);
+  opacity: 1;
+}
+:global(.modal-fade-leave-to) {
+  transform: translateY(100px);
+  opacity: 0;
+}
+:global(.modal-fade-leave-active) {
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
 }
 </style>
 
@@ -190,8 +218,12 @@ onUnmounted(() => {
       :class="'items-center justify-center md:hidden'"
       @closeModal="toggleSidebar"
       :teleportPlace="'#board'"
+      :transitionName="'modal-fade'"
     >
-      <div class="bg-(--cst-bg2) text-(--cst-foreground) min-w-[264px] rounded-md font-bold">
+      <div
+        v-if="showSidebar && isMobile"
+        class="bg-(--cst-bg2) text-(--cst-foreground) min-w-[264px] rounded-md font-bold"
+      >
         <div class="flex flex-col pr-6 gap-4">
           <p class="px-6 text-[12px] tracking-[2.4px] pt-4">ALL BOARDS ({{ boardsCount }})</p>
           <nav aria-label="Navigation main sidebar">

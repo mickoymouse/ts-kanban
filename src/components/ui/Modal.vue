@@ -16,6 +16,11 @@ const props = defineProps({
     required: false,
     default: "body",
   },
+  transitionName: {
+    type: String,
+    required: false,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["closeModal"]);
@@ -23,8 +28,21 @@ const emit = defineEmits(["closeModal"]);
 
 <template>
   <Teleport :to="props.teleportPlace">
-    <div v-if="props.show" class="w-full h-full absolute z-999 bg-black/50 inset-0">
-      <div :class="`flex w-full h-full ${props.class}`" @mousedown.self="emit('closeModal')">
+    <div v-if="props.show" class="w-full h-full absolute z-99 bg-black/50 inset-0"></div>
+    <Transition v-if="props.transitionName" :name="props.transitionName">
+      <div
+        v-if="props.show"
+        :class="`flex w-full h-full z-999 absolute ${props.class}`"
+        @mousedown.self="emit('closeModal')"
+      >
+        <slot></slot>
+      </div>
+    </Transition>
+    <div v-else-if="props.show" class="w-full h-full absolute z-999 bg-black/50 inset-0">
+      <div
+        :class="`flex w-full h-full absolute ${props.class}`"
+        @mousedown.self="emit('closeModal')"
+      >
         <slot></slot>
       </div>
     </div>

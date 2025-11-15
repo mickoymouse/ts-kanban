@@ -68,7 +68,7 @@ watch(refreshBoard, boardRoutingHandler);
 
 <template>
   <aside
-    class="bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-all duration-500 ease-in-out"
+    class="bg-(--cst-bg2) border-r border-(--cst-lines) text-[15px] text-(--cst-foreground) font-bold select-none transition-[width, opacity] duration-500 ease-in-out"
     :class="
       !showSidebar
         ? 'w-0 min-w-0 max-w-0 overflow-hidden opacity-0'

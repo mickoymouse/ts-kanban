@@ -54,7 +54,7 @@ const closeBoardOptions = () => {
   showBoardOptions.value = false;
 };
 const openBoardOptions = () => {
-  if (isLoading.value || board.value == null) return;
+  if (isLoading.value || board.value == null || (showSidebar.value && isMobile.value)) return;
   showBoardOptions.value = true;
 };
 
@@ -178,7 +178,9 @@ onUnmounted(() => {
       <div v-else class="flex items-center gap-4 relative">
         <button
           class="h-8 md:h-10 w-12 md:w-[164px] flex items-center justify-center bg-(--cst-primary) rounded-full disabled:opacity-30 disabled:cursor-not-allowed text-white cursor-pointer hover:bg-(--cst-primary-hover) transition-colors"
-          :disabled="isLoading || board == null || board.columns.length === 0"
+          :disabled="
+            isLoading || board == null || board.columns.length === 0 || (showSidebar && isMobile)
+          "
           @click="showTaskModal('create')"
         >
           <p class="hidden md:block">+ Add New Task</p>
@@ -186,7 +188,10 @@ onUnmounted(() => {
         </button>
         <OptionsButton
           :class="[
-            { 'opacity-30 cursor-not-allowed': isLoading || board == null },
+            {
+              'opacity-30 cursor-not-allowed':
+                isLoading || board == null || (showSidebar && isMobile),
+            },
             { 'cursor-pointer hover:opacity-80': !isLoading && board != null },
           ]"
           @click="openBoardOptions"

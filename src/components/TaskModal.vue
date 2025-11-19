@@ -13,7 +13,7 @@ const { closeTaskModal } = taskModalStore;
 </script>
 
 <template>
-  <Modal :show="show" @closeModal="closeTaskModal">
+  <Modal :show="show" @closeModal="closeTaskModal" :class="'px-6 md:px-0'">
     <div
       class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[75vh] overflow-auto gap-4 font-bold"
     >

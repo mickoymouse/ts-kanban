@@ -9,7 +9,7 @@ const props = defineProps({
   class: {
     type: String,
     required: false,
-    default: "items-center justify-center",
+    default: "",
   },
   teleportPlace: {
     type: String,
@@ -32,7 +32,7 @@ const emit = defineEmits(["closeModal"]);
     <Transition v-if="props.transitionName" :name="props.transitionName">
       <div
         v-if="props.show"
-        :class="`flex w-full h-full z-999 absolute ${props.class}`"
+        :class="['flex w-full h-full z-999 absolute items-center justify-center', props.class]"
         @mousedown.self="emit('closeModal')"
       >
         <slot></slot>
@@ -40,7 +40,7 @@ const emit = defineEmits(["closeModal"]);
     </Transition>
     <div v-else-if="props.show" class="w-full h-full absolute z-999 bg-black/50 inset-0">
       <div
-        :class="`flex w-full h-full absolute ${props.class}`"
+        :class="['flex w-full h-full z-999 absolute items-center justify-center', props.class]"
         @mousedown.self="emit('closeModal')"
       >
         <slot></slot>

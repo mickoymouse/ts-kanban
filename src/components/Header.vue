@@ -172,7 +172,7 @@ onUnmounted(() => {
       </div>
       <!-- skeleton for add task button and option -->
       <div v-if="isLoading" class="flex items-center gap-4">
-        <div class="h-10 bg-(--cst-lines) rounded-full animate-pulse w-[164px]"></div>
+        <div class="h-10 bg-(--cst-lines) rounded-full animate-pulse w-[48px] md:w-[164px]"></div>
         <div class="w-6 h-6 bg-(--cst-lines) rounded-full animate-pulse"></div>
       </div>
       <div v-else class="flex items-center gap-4 relative">

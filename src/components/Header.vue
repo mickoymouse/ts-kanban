@@ -199,7 +199,7 @@ onUnmounted(() => {
         <div
           v-show="showBoardOptions"
           ref="boardOptionsRef"
-          class="bg-(--cst-bg2) flex flex-col gap-2 absolute right-0 top-full font-medium text-[13px] rounded-md shadow-md overflow-hidden z-99"
+          class="bg-(--cst-bg2) flex flex-col gap-2 absolute right-0 top-full font-medium text-[13px] rounded-md shadow-md overflow-hidden z-99 min-w-[115px]"
         >
           <button
             class="text-(--cst-foreground) text-[13px] w-full text-left cursor-pointer hover:bg-(--cst-bg) px-4 py-2"

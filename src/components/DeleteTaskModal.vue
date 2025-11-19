@@ -38,7 +38,7 @@ const cancelDelete = () => {
 </script>
 
 <template>
-  <Modal :show="showDelete" @closeModal="closeDeleteModal" :class="'px-6 md:px-0'">
+  <Modal :show="showDelete" @closeModal="cancelDelete" :class="'px-6 md:px-0'">
     <div
       class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[75vh] overflow-auto gap-4 font-bold"
     >

@@ -23,7 +23,7 @@ const deleteBoard = async () => {
   try {
     await deleteBoardMutation.mutate({ boardId: board.value!._id as Id<"boards"> });
     refreshBoardHandler();
-    closeDeleteModal(true);
+    closeDeleteModal();
     toast.success("Board deleted successfully!");
   } catch (error) {
     console.error("Error deleting board:", error);
@@ -34,12 +34,12 @@ const deleteBoard = async () => {
 };
 
 const cancelDelete = () => {
-  closeDeleteModal();
+  closeDeleteModal(false);
 };
 </script>
 
 <template>
-  <Modal :show="showDeleteModal" @closeModal="closeDeleteModal" :class="'px-6 md:px-0'">
+  <Modal :show="showDeleteModal" @closeModal="cancelDelete" :class="'px-6 md:px-0'">
     <div
       class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[75vh] overflow-auto gap-4 font-bold"
     >

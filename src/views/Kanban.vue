@@ -16,7 +16,7 @@ const { openBoardModal } = boardStore;
       <div class="h-10 bg-gray-300 rounded-full animate-pulse w-36"></div>
     </div>
     <div v-else class="flex-1 flex flex-col items-center justify-center gap-4 font-bold">
-      <p class="text-[18px] text-(--cst-foreground)">
+      <p class="px-6 md:px-0 text-[18px] text-(--cst-foreground)">
         Your kanban is empty. Create a new board to get started.
       </p>
       <button

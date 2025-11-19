@@ -90,7 +90,7 @@ onMounted(async () => {
       v-else-if="!columns || columns.length == 0"
       class="flex-1 flex flex-col items-center justify-center gap-4 font-bold text-center mx-8"
     >
-      <p class="text-[18px] text-(--cst-foreground)">
+      <p class="px-6 md:px-0 text-[18px] text-(--cst-foreground)">
         This board is empty. Create a new column to get started.
       </p>
       <button

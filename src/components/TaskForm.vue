@@ -156,7 +156,7 @@ const removeSubtask = (index: number) => {
       </p>
     </div>
     <fieldset
-      class="flex flex-col gap-2 max-h-[30vh] overflow-auto scrollbar-hide"
+      class="flex flex-col gap-2 max-h-[50vh] overflow-auto scrollbar-hide"
       :disabled="isExecuting"
     >
       <legend class="text-[12px] text-(--cst-foreground) pb-4">Subtasks</legend>

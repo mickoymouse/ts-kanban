@@ -15,7 +15,7 @@ const { closeTaskModal } = taskModalStore;
 <template>
   <Modal :show="show" @closeModal="closeTaskModal" :class="'px-6 md:px-0'">
     <div
-      class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[50vh] overflow-auto gap-4 font-bold"
+      class="flex flex-col bg-(--cst-bg2) p-6 rounded-md w-[480px] max-h-[50vh] overflow-auto gap-4 font-bold scrollbar-hide"
     >
       <ViewTask v-if="taskAction === 'view' && task" :task="task" />
       <CreateTask v-else-if="taskAction === 'create' && !task" />

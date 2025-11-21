@@ -155,7 +155,10 @@ const removeSubtask = (index: number) => {
         {{ getFieldErrors("description") }}
       </p>
     </div>
-    <fieldset class="flex flex-col gap-2" :disabled="isExecuting">
+    <fieldset
+      class="flex flex-col gap-2 max-h-[30vh] overflow-auto scrollbar-hide"
+      :disabled="isExecuting"
+    >
       <legend class="text-[12px] text-(--cst-foreground) pb-4">Subtasks</legend>
       <div class="flex flex-col gap-2" v-for="(_, index) in taskForm.subtasks" :key="index">
         <div class="flex items-center gap-4 w-full">

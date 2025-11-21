@@ -128,11 +128,11 @@ onUnmounted(() => {
   <p class="text-[12px] text-(--cst-foreground)">
     Subtasks ({{ taskCompleted }} of {{ totalTasks }})
   </p>
-  <ul class="flex flex-col gap-2 select-none">
+  <ul class="flex flex-col gap-2 select-none max-h-[30vh] overflow-auto scrollbar-hide">
     <li
       v-for="subtask in task?.subtasks"
       :key="subtask._id"
-      class="p-4 bg-(--cst-bg) rounded-md hover:bg-(--cst-primary)/25 cursor-pointer"
+      class="bg-(--cst-bg) rounded-md hover:bg-(--cst-primary)/25 cursor-pointer p-4"
     >
       <Checkbox
         :id="subtask.title"

@@ -70,7 +70,7 @@ onUnmounted(() => {
     </button>
     <div
       v-show="open"
-      class="absolute z-10 bg-(--cst-bg2) rounded-b-md"
+      class="absolute z-10 bg-(--cst-bg2) rounded-b-md max-h-[200px] overflow-auto scrollbar-hide"
       :style="{ width: buttonWidth }"
     >
       <ul>
